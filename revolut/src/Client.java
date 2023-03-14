@@ -7,7 +7,6 @@ public class Client {
     private String phoneNumber;
     private String address;
     private Boolean premiumAccount = false;
-    private Vector<Account> bankAccounts;
     private Map<Asset, Float> assetsOwned;
 
     public Client() { 
@@ -20,14 +19,13 @@ public class Client {
             String phoneNumber,
             String address,
             Boolean premiumAccount,
-            Vector<Account> bankAccounts,
+
             Map<Asset, Float> assetsOwned) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.premiumAccount = premiumAccount;
-        this.bankAccounts = bankAccounts;
         this.assetsOwned = assetsOwned;
     }
 
@@ -79,11 +77,4 @@ public class Client {
         this.premiumAccount = premiumAccount;
     }
 
-    public Vector<Account> getBankAccounts() {
-        return bankAccounts;
-    }
-
-    public void setBankAccounts(Vector<Account> bankAccounts) {
-        this.bankAccounts = bankAccounts;
-    }
 }
