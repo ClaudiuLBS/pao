@@ -1,11 +1,11 @@
 public class Account {
     private String IBAN;
     private String cardNumber;
-    private Client owner;
+    private User owner;
 
     public Account() {}
 
-    public Account(String IBAN, String cardNumber, Client owner) {
+    public Account(String IBAN, String cardNumber, User owner) {
         this.IBAN = IBAN;
         this.cardNumber = cardNumber;
         this.owner = owner;
@@ -27,11 +27,11 @@ public class Account {
         this.cardNumber = cardNumber;
     }
 
-    public Client getOwner() {
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(Client owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 }
