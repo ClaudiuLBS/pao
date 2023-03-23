@@ -1,7 +1,6 @@
 import java.util.Map;
-import java.util.Vector;
 
-public class Client {
+public class User {
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -9,11 +8,11 @@ public class Client {
     private Boolean premiumAccount = false;
     private Map<Asset, Float> assetsOwned;
 
-    public Client() {
+    public User() {
 
     }
 
-    public Client(
+    public User(
             String firstName,
             String lastName,
             String phoneNumber,

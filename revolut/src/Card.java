@@ -1,5 +1,5 @@
 public class Card {
-    private Client owner;
+    private User owner;
     private String tag;
     private String number;
     private Double limit;
@@ -7,18 +7,18 @@ public class Card {
     public Card() {
     }
 
-    public Card(Client owner, String tag, String number, Double limit) {
+    public Card(User owner, String tag, String number, Double limit) {
         this.owner = owner;
         this.tag = tag;
         this.number = number;
         this.limit = limit;
     }
 
-    public Client getOwner() {
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(Client owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 
