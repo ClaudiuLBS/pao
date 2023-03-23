@@ -4,7 +4,8 @@ public class Card {
     private String number;
     private Double limit;
 
-    public Card() {}
+    public Card() {
+    }
 
     public Card(Client owner, String tag, String number, Double limit) {
         this.owner = owner;

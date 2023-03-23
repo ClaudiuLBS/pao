@@ -3,10 +3,11 @@ public class Asset {
     protected String abbreviation;
     protected Double value;
 
-    public Asset(){
+    public Asset() {
 
     }
-    public Asset(String name, String abbreviation, Double value){
+
+    public Asset(String name, String abbreviation, Double value) {
         this.name = name;
         this.abbreviation = abbreviation;
         this.value = value;

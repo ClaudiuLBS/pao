@@ -3,7 +3,8 @@ public class Account {
     private String cardNumber;
     private Client owner;
 
-    public Account() {}
+    public Account() {
+    }
 
     public Account(String IBAN, String cardNumber, Client owner) {
         this.IBAN = IBAN;

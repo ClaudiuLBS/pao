@@ -6,10 +6,13 @@ public class Transaction {
     private Double amount;
     private Double tax;
     private Date date;
-    enum Status { Pending, Accepted, Rejected }
+
+    enum Status {Pending, Accepted, Rejected}
+
     private Status status;
 
-    public Transaction() {}
+    public Transaction() {
+    }
 
     public Transaction(String senderIBAN, String receiverIBAN, Double amount, Double tax, Date date, Status status) {
         this.senderIBAN = senderIBAN;

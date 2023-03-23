@@ -9,7 +9,7 @@ public class Client {
     private Boolean premiumAccount = false;
     private Map<Asset, Float> assetsOwned;
 
-    public Client() { 
+    public Client() {
 
     }
 

@@ -9,10 +9,10 @@ public class Loan {
 
     }
 
-    public Loan(String type, Double interestRate, Integer period){
+    public Loan(String type, Double interestRate, Integer period) {
         this.type = type;
         this.interestRate = interestRate;
-        this.period= period;
+        this.period = period;
     }
 
     public String getType() {
@@ -37,5 +37,10 @@ public class Loan {
 
     public void setPeriod(Integer period) {
         this.period = period;
+    }
+
+    @Override
+    public String toString(){
+        return "Tip : " + this.type + "\nPeriod : " + this.period + "\nInterest Rate : " + this.interestRate + "\n";
     }
 }

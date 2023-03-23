@@ -4,10 +4,11 @@ import java.util.function.DoubleBinaryOperator;
 public class CryptoCurrency extends Asset {
     protected Double stakingReturn;
 
-    public CryptoCurrency(){
+    public CryptoCurrency() {
 
     }
-    public CryptoCurrency(String name, String abb, Double value, Double stakingReturn){
+
+    public CryptoCurrency(String name, String abb, Double value, Double stakingReturn) {
         super(name, abb, value);
         this.stakingReturn = stakingReturn;
     }
