@@ -5,9 +5,9 @@ public class Share extends Asset {
 
     }
 
-    public Share(String name, String abbr, Double value, Double dividents) {
-        super(name, abbr, value);
-        this.dividends = dividents;
+    public Share(String name, String abbreviation, Double value, Double dividends) {
+        super(name, abbreviation, value);
+        this.dividends = dividends;
     }
 
     public Double getDividends() {
