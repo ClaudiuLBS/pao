@@ -8,9 +8,6 @@ public class Transaction {
     private Double tax;
     private LocalDate date;
 
-    enum Status {Pending, Accepted, Rejected}
-
-
     public Transaction() {
     }
 
@@ -62,4 +59,13 @@ public class Transaction {
         this.date = date;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction" +
+                "\nSenderIBAN : " + senderIBAN +
+                "\nReceiverIBAN : " + receiverIBAN +
+                "\nAmount : " + amount +
+                "\nTax : " + tax +
+                "\nDate : " + date;
+    }
 }
