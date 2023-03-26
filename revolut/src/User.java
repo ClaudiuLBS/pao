@@ -8,6 +8,7 @@ public class User {
     private Boolean premiumAccount = false;
     private Map<Asset, Float> assetsOwned;
 
+
     public User() {
 
     }

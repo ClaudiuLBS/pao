@@ -1,6 +1,7 @@
 import java.util.Date;
 
 public class Transaction {
+    //cand facem o tranzactie se aduaga la ambii useri
     private String senderIBAN;
     private String receiverIBAN;
     private Double amount;
