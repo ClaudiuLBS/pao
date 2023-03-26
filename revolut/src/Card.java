@@ -1,15 +1,19 @@
+import java.time.LocalDate;
+
 public class Card {
     private String tag;
     private String number;
     private Double limit;
     private Integer CVV;
-    public Card() {
-    }
+    private LocalDate expirationDate;
+    public Card() {}
 
-    public Card(String tag, String number, Double limit) {
+    public Card(String tag, String number, Double limit, Integer CVV, LocalDate expirationDate) {
         this.tag = tag;
         this.number = number;
         this.limit = limit;
+        this.CVV = CVV;
+        this.expirationDate = expirationDate;
     }
 
     public String getTag() {
@@ -34,6 +38,22 @@ public class Card {
 
     public void setLimit(Double limit) {
         this.limit = limit;
+    }
+
+    public Integer getCVV() {
+        return CVV;
+    }
+
+    public void setCVV(Integer CVV) {
+        this.CVV = CVV;
+    }
+
+    public LocalDate getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(LocalDate expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     @Override
