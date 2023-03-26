@@ -1,15 +1,12 @@
 public class Account {
     private String IBAN;
-    private String cardNumber;
-    private User owner;
+    private Double balance;
 
     public Account() {
     }
 
     public Account(String IBAN, String cardNumber, User owner) {
         this.IBAN = IBAN;
-        this.cardNumber = cardNumber;
-        this.owner = owner;
     }
 
     public String getIBAN() {
@@ -20,19 +17,11 @@ public class Account {
         this.IBAN = IBAN;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
+    public Double getBalance() {
+        return balance;
     }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 }

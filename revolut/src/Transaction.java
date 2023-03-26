@@ -1,4 +1,4 @@
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Transaction {
     //cand facem o tranzactie se aduaga la ambii useri
@@ -6,22 +6,20 @@ public class Transaction {
     private String receiverIBAN;
     private Double amount;
     private Double tax;
-    private Date date;
+    private LocalDate date;
 
     enum Status {Pending, Accepted, Rejected}
 
-    private Status status;
 
     public Transaction() {
     }
 
-    public Transaction(String senderIBAN, String receiverIBAN, Double amount, Double tax, Date date, Status status) {
+    public Transaction(String senderIBAN, String receiverIBAN, Double amount, Double tax, LocalDate date) {
         this.senderIBAN = senderIBAN;
         this.receiverIBAN = receiverIBAN;
         this.amount = amount;
         this.tax = tax;
         this.date = date;
-        this.status = status;
     }
 
     public String getSenderIBAN() {
@@ -56,19 +54,12 @@ public class Transaction {
         this.tax = tax;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }
