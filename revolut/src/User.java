@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Vector;
+import java.util.*;
 
 public class User {
     private String firstName;
@@ -116,8 +114,7 @@ public class User {
         if (senderAccount == null)
             throw new IOException("Unfortunately, your current financial situation does not permit you to engage in any transactions at this time.");
 
-        senderAccount.setBalance(senderAccount.getBalance() - amount - tax);
-
+        senderAccount.withdraw(amount + tax);
         Transaction transaction = new Transaction(senderAccount.getIBAN(), IBAN, amount, tax, LocalDate.now());
         this.transactions.add(transaction);
 
@@ -125,6 +122,7 @@ public class User {
         for (User user : users) {
             for (Account account : user.accounts) {
                 if (Objects.equals(account.getIBAN(), IBAN)) {
+                    user.accounts.get(0).deposit(amount);
                     user.transactions.add(transaction);
                     break;
                 }
@@ -133,4 +131,53 @@ public class User {
 
     }
 
+    public void buyAsset(Asset asset, Double amount) throws IOException{
+        for (Account account : this.accounts) {
+            if (account.getBalance() >= asset.getValue() * amount) {
+                account.withdraw(asset.getValue() * amount);
+                this.assetsOwned.put(asset, this.assetsOwned.getOrDefault(asset, 0.0) + amount);
+            }
+        }
+        throw new IOException("I'm sorry, but it seems that your current financial situation does not allow for the purchase of this item at this time. Perhaps it would be best to consider more affordable options or save up for the future.");
+    }
+
+    public void sellAsset(Asset asset, Double amount) throws IOException{
+        double ownedAmount = this.assetsOwned.getOrDefault(asset, 0.0);
+        if (ownedAmount < amount)
+            throw new IOException("I apologize, but it appears that the amount of this asset currently in your possession is not sufficient.");
+
+        this.assetsOwned.put(asset, ownedAmount - amount);
+        this.accounts.get(0).deposit(asset.getValue() * amount);
+    }
+
+    private String generateIBAN() {
+        StringBuilder IBAN = new StringBuilder("RO47 BRVL");
+        Random random = new Random();
+        for (int i = 1; i <= 4; i++) {
+            int randomNumber = random.nextInt(9000) + 1000;
+            IBAN.append(" ").append(randomNumber);
+        }
+        return IBAN.toString();
+    }
+    public Account createAccount(Currency currency) {
+        Account account = new Account(this.generateIBAN(), currency);
+        this.accounts.add(account);
+        return account;
+    }
+
+    private String generateCardNumber() {
+        StringBuilder cardNumber = new StringBuilder("0420");
+        Random random = new Random();
+        for (int i = 1; i <= 3; i++) {
+            int randomNumber = random.nextInt(9000) + 1000;
+            cardNumber.append(" ").append(randomNumber);
+        }
+        return cardNumber.toString();
+    }
+    public Card createCard(String tag, Double limit) {
+        Random random = new Random();
+        Card card = new Card(tag, this.generateCardNumber(), limit, random.nextInt(900) + 100, LocalDate.now().plusYears(4));
+        this.cards.add(card);
+        return card;
+    }
 }

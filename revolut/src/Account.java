@@ -1,20 +1,14 @@
+import java.util.Currency;
+
 public class Account {
     private String IBAN;
     private Double balance;
-    private String currency;
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
+    private Currency currency;
 
     public Account() {
     }
 
-    public Account(String IBAN, String currency) {
+    public Account(String IBAN, Currency currency) {
         this.IBAN = IBAN;
         this.currency =  currency;
     }
@@ -34,6 +28,25 @@ public class Account {
     public void setBalance(Double balance) {
         this.balance = balance;
     }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public void withdraw(Double amount) {
+        if (this.balance >= amount) {
+            this.balance -= amount;
+        }
+    }
+
+    public void deposit(Double amount) {
+        this.balance += amount;
+    }
+
     @Override
     public String toString() {
         return "Account information\n" +
