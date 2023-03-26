@@ -8,8 +8,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    private String email;
     private String address;
-    private Boolean premiumAccount = false;
     private Map<Asset, Double> assetsOwned;
     private Vector<Account> accounts;
     private Vector<Card> cards;
@@ -30,7 +30,6 @@ public class User {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.premiumAccount = premiumAccount;
         this.assetsOwned = assetsOwned;
     }
 
@@ -74,14 +73,6 @@ public class User {
         this.address = address;
     }
 
-    public Boolean getPremiumAccount() {
-        return premiumAccount;
-    }
-
-    public void setPremiumAccount(Boolean premiumAccount) {
-        this.premiumAccount = premiumAccount;
-    }
-
     public Vector<Account> getAccounts() {
         return accounts;
     }
@@ -104,6 +95,14 @@ public class User {
 
     public void setTransactions(Vector<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void makeTransaction(String IBAN, Double amount, Vector<User> users) throws IOException {
@@ -131,6 +130,7 @@ public class User {
                 }
             }
         }
+
     }
 
 }
