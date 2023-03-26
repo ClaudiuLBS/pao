@@ -20,4 +20,10 @@ public class CryptoCurrency extends Asset {
     public void setStakingReturn(Double stakingReturn) {
         this.stakingReturn = stakingReturn;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "\nStakingReturn=" + stakingReturn;
+    }
 }

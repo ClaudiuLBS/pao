@@ -1,15 +1,22 @@
 public class Account {
     private String IBAN;
-    private String cardNumber;
-    private User owner;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    private String currency;
 
     public Account() {
     }
 
-    public Account(String IBAN, String cardNumber, User owner) {
+    public Account(String IBAN, String currency) {
         this.IBAN = IBAN;
-        this.cardNumber = cardNumber;
-        this.owner = owner;
+        this.currency =  currency;
     }
 
     public String getIBAN() {
@@ -20,19 +27,11 @@ public class Account {
         this.IBAN = IBAN;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
-    }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
+    @Override
+    public String toString() {
+        return "Account information\n" +
+                "\nIBAN : " + IBAN + '\n' +
+                "\nCurrency : " + currency;
     }
 }

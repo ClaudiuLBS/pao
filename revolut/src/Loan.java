@@ -40,7 +40,10 @@ public class Loan {
     }
 
     @Override
-    public String toString(){
-        return "Tip : " + this.type + "\nPeriod : " + this.period + "\nInterest Rate : " + this.interestRate + "\n";
+    public String toString() {
+        return  "Type : " + type +
+                "\nInterestRate : " + interestRate +
+                "\nPeriod=" + period;
     }
+
 }

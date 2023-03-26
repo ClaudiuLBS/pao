@@ -1,25 +1,15 @@
 public class Card {
-    private User owner;
     private String tag;
     private String number;
     private Double limit;
-
+    private Integer CVV;
     public Card() {
     }
 
-    public Card(User owner, String tag, String number, Double limit) {
-        this.owner = owner;
+    public Card(String tag, String number, Double limit) {
         this.tag = tag;
         this.number = number;
         this.limit = limit;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
     }
 
     public String getTag() {
@@ -44,5 +34,14 @@ public class Card {
 
     public void setLimit(Double limit) {
         this.limit = limit;
+    }
+
+    @Override
+    public String toString() {
+        return  "Card information" +
+                "\nTag : '" + tag +
+                "\nNumber : " + number +
+                "\nCVV : " + CVV +
+                "\nLimit : " + limit;
     }
 }

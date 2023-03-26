@@ -36,4 +36,11 @@ public class Asset {
     public void setValue(Double value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "Name = " + name +
+                "\nAbbreviation='" + abbreviation +
+                "\nValue=" + value;
+    }
 }

@@ -8,6 +8,7 @@ public class Transaction {
     private Double tax;
     private Date date;
 
+    private
     enum Status {Pending, Accepted, Rejected}
 
     private Status status;
@@ -70,5 +71,16 @@ public class Transaction {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction" +
+                "\nSenderIBAN : " + senderIBAN +
+                "\nReceiverIBAN : " + receiverIBAN +
+                "\nAmount : " + amount +
+                "\nTax : " + tax +
+                "\nDate : " + date +
+                "\nStatus : " + status;
     }
 }

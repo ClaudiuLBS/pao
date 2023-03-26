@@ -1,7 +1,5 @@
-import java.time.Duration;
-
 public class Share extends Asset {
-    protected Double dividents;
+    protected Double dividends;
 
     public Share() {
 
@@ -9,14 +7,20 @@ public class Share extends Asset {
 
     public Share(String name, String abbr, Double value, Double dividents) {
         super(name, abbr, value);
-        this.dividents = dividents;
+        this.dividends = dividents;
     }
 
-    public Double getDividents() {
-        return dividents;
+    public Double getDividends() {
+        return dividends;
     }
 
-    public void setDividents(Double dividents) {
-        this.dividents = dividents;
+    public void setDividends(Double dividends) {
+        this.dividends = dividends;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "\nDividends=" + dividends;
     }
 }
