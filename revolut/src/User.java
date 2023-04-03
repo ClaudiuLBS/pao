@@ -7,7 +7,6 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private String email;
-    private String address;
     private Map<Asset, Double> assetsOwned;
     private Vector<Account> accounts;
     private Vector<Card> cards;
@@ -15,20 +14,23 @@ public class User {
 
     private String password;
     public User() {
-
+        this.accounts = new Vector<>();
+        this.createAccount(Currency.getInstance(new Locale("ro", "RO")));
+        this.cards = new Vector<>();
+        this.createCard("Default", 0.0);
+        this.transactions = new Vector<>();
+        this.assetsOwned = new HashMap<>();
     }
 
     public User(
             String firstName,
             String lastName,
             String phoneNumber,
-            String address,
             String password,
             Map<Asset, Double> assetsOwned) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.address = address;
         this.assetsOwned = assetsOwned;
         this.password = password;
     }
@@ -63,14 +65,6 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public Vector<Account> getAccounts() {
@@ -113,6 +107,19 @@ public class User {
         this.password = password;
     }
 
+    public Double getBalance() {
+        Double balance = 0.0;
+        for (Account a : accounts)
+            balance += a.getBalance();
+        return balance;
+    }
+
+    public Double getAssetsValue() {
+        Double value = 0.0;
+        for (Asset a : assetsOwned.keySet())
+            value += a.value * assetsOwned.get(a);
+        return value;
+    }
     public void makeTransaction(String IBAN, Double amount, Vector<User> users) throws IOException {
         Double tax = amount * 0.05;
         Account senderAccount = null;
@@ -189,5 +196,18 @@ public class User {
         Card card = new Card(tag, this.generateCardNumber(), limit, random.nextInt(900) + 100, LocalDate.now().plusYears(4));
         this.cards.add(card);
         return card;
+    }
+
+    @Override
+    public String toString() {
+        return
+            "Name: " + firstName + " " + lastName + '\n' +
+            "Phone Number: " + phoneNumber + '\n' +
+            "Email: " + email + '\n' +
+            "Accounts: " + accounts.size() + '\n' +
+            "Cards: " + cards.size() + '\n' +
+            "Transactions: " + transactions.size() + '\n' +
+            "Assets Value: " + getAssetsValue() + '\n' +
+            "Balance: " + getBalance() + '\n';
     }
 }
