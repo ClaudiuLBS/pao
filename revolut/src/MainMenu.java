@@ -53,7 +53,6 @@ public final class MainMenu {
     }
 
     public void LogIn(){
-
     }
 
     public void landingMenu() {
@@ -82,18 +81,73 @@ public final class MainMenu {
             case 2:
                 Register();
                 break;
-            case 3:
+            case 0:
                 System.exit(0);
             default:
                 break;
         }
     }
 
+    public void userInfo() {
+
+    }
+    public void userAccounts() {
+
+    }
+    public void userCards() {
+
+    }
+
+    public void userTransactions() {
+
+    }
+
+    public void userAssets() {
+
+    }
+
     public void userMenu() {
         if (currentMenu != 1) return;
+        Scanner scanner = new Scanner(System.in);
+        final String  menuOptions[] = {"Info", "Accounts", "Cards", "Transactions", "Assets", "Exit"};
+        int optionsLength = menuOptions.length;
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+
+
+        for(int i = 0; i < optionsLength; ++i) {
+            System.out.println(i + 1 + "." + menuOptions[i]);
+        }
+
+        System.out.print("\nYour answer : ");
+        int input = scanner.nextInt();
+
+        switch (input){
+            case 1:
+                userInfo();
+                break;
+            case 2:
+                userAccounts();
+                break;
+            case 3:
+                userCards();
+                break;
+            case 4:
+                userTransactions();
+                break;
+            case 5:
+                userAssets();
+                break;
+            case 0:
+                System.exit(0);
+            default:
+                break;
+        }
     }
     public void Menu(){
         while (true) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
             landingMenu();
             userMenu();
         }
