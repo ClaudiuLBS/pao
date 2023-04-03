@@ -1,12 +1,27 @@
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Vector;
-import java.io.Console;
 
 public final class MainMenu {
     private static MainMenu instance;
     private static Vector<User> users;
     private static Integer currentMenu = 0;
 
+    private boolean search(String where, String what) {
+        switch (where) {
+            case "email":
+                for (User user : users) {
+                    return Objects.equals(user.getEmail(), what);
+
+                }
+            case "phone":
+                for (User user : users) {
+                    return Objects.equals(user.getPhoneNumber(), what);
+                }
+            default:
+                return false;
+        }
+    }
     private MainMenu() {
         this.users = new Vector<>();
     }
@@ -19,10 +34,11 @@ public final class MainMenu {
     }
 
     public void Register(){
-        Console console = System.console();
-
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
         User user = new User();
         Scanner scanner = new Scanner(System.in);
+        boolean registerCheck;
         System.out.print("***************************************************************************************************\n");
 
         System.out.println("Welcome to the registration form!");
@@ -44,8 +60,15 @@ public final class MainMenu {
         user.setPassword(scanner.nextLine());
 
         // check for
-        System.out.println(user);
-        users.add(user);
+        registerCheck = !(search("email", user.getEmail()) | search("phone", user.getPhoneNumber()));
+        if(registerCheck) {
+            System.out.println(user);
+            users.add(user);
+        }
+        else{
+            System.out.println("Phone number or email already exists!");
+            return;
+        }
         currentMenu = 1;
     }
 
@@ -55,7 +78,7 @@ public final class MainMenu {
     public void landingMenu() {
         if (currentMenu != 0) return;
         Scanner scanner = new Scanner(System.in);
-        final String  menu1Options[] = {"Login", "Register", "Exit"};
+        final String[] menu1Options = {"Login", "Register", "Exit"};
         int optionsLength = menu1Options.length;
         System.out.print("\033[H\033[2J");
         System.out.flush();
@@ -71,17 +94,12 @@ public final class MainMenu {
         System.out.print("\nYour answer: ");
         int input = scanner.nextInt();
 
-        switch (input){
-            case 1:
-                LogIn();
-                break;
-            case 2:
-                Register();
-                break;
-            case 0:
-                System.exit(0);
-            default:
-                break;
+        switch (input) {
+            case 1 -> LogIn();
+            case 2 -> Register();
+            case 0 -> System.exit(0);
+            default -> {
+            }
         }
     }
 
@@ -106,12 +124,12 @@ public final class MainMenu {
     public void userMenu() {
         if (currentMenu != 1) return;
         Scanner scanner = new Scanner(System.in);
-        final String  menuOptions[] = {"Info", "Accounts", "Cards", "Transactions", "Assets", "Exit"};
+        final String[] menuOptions = {"Account information", "Accounts", "Cards", "Transactions", "Assets", "Exit"};
         int optionsLength = menuOptions.length;
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
-
+        System.out.println("***************************************************************************************************\n");
         for(int i = 0; i < optionsLength; ++i) {
             System.out.println(i + 1 + "." + menuOptions[i]);
         }
@@ -119,26 +137,15 @@ public final class MainMenu {
         System.out.print("\nYour answer : ");
         int input = scanner.nextInt();
 
-        switch (input){
-            case 1:
-                userInfo();
-                break;
-            case 2:
-                userAccounts();
-                break;
-            case 3:
-                userCards();
-                break;
-            case 4:
-                userTransactions();
-                break;
-            case 5:
-                userAssets();
-                break;
-            case 0:
-                System.exit(0);
-            default:
-                break;
+        switch (input) {
+            case 1 -> userInfo();
+            case 2 -> userAccounts();
+            case 3 -> userCards();
+            case 4 -> userTransactions();
+            case 5 -> userAssets();
+            case 0 -> System.exit(0);
+            default -> {
+            }
         }
     }
     public void Menu(){
