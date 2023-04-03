@@ -2,7 +2,7 @@ import java.util.Currency;
 
 public class Account {
     private String IBAN;
-    private Double balance;
+    private Double balance = 0.0;
     private Currency currency;
 
     public Account() {

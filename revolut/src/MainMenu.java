@@ -6,7 +6,7 @@ public final class MainMenu {
     private static MainMenu instance;
     private static Vector<User> users;
     private static Integer currentMenu = 0;
-
+    private User currentUser;
     private MainMenu() {
         this.users = new Vector<>();
     }
@@ -44,8 +44,8 @@ public final class MainMenu {
         user.setPassword(scanner.nextLine());
 
         // check for
-        System.out.println(user);
         users.add(user);
+        currentUser = user;
         currentMenu = 1;
     }
 
@@ -86,7 +86,10 @@ public final class MainMenu {
     }
 
     public void userInfo() {
-
+        System.out.println(currentUser);
+        System.out.println("Type anything to go back...");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
     }
     public void userAccounts() {
 
@@ -105,6 +108,7 @@ public final class MainMenu {
 
     public void userMenu() {
         if (currentMenu != 1) return;
+        System.out.println("Logged in as " + currentUser.getFirstName());
         Scanner scanner = new Scanner(System.in);
         final String  menuOptions[] = {"Info", "Accounts", "Cards", "Transactions", "Assets", "Exit"};
         int optionsLength = menuOptions.length;
@@ -143,8 +147,6 @@ public final class MainMenu {
     }
     public void Menu(){
         while (true) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
             landingMenu();
             userMenu();
         }
