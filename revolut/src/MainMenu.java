@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.Vector;
@@ -6,6 +7,7 @@ public final class MainMenu {
     private static MainMenu instance;
     private static Vector<User> users;
     private static Integer currentMenu = 0;
+
     private boolean search(String where, String what) {
         switch (where) {
             case "email":
@@ -33,16 +35,14 @@ public final class MainMenu {
         return instance;
     }
 
-    public void Register(){
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+    public void Register() {
         User user = new User();
-        Scanner scanner = new Scanner(System.in);
         boolean registerCheck;
         System.out.print("***************************************************************************************************\n");
 
         System.out.println("Welcome to the registration form!");
         System.out.println("Please enter your information below:");
+        Scanner scanner = new Scanner(System.in);
 
         System.out.print("First Name: ");
         user.setFirstName(scanner.nextLine());
@@ -61,25 +61,36 @@ public final class MainMenu {
 
         // check for
         registerCheck = !(search("email", user.getEmail()) | search("phone", user.getPhoneNumber()));
-        if(registerCheck) {
-            System.out.println(user);
-            users.add(user);
-        }
-        else{
+        if(!registerCheck) {
             System.out.println("Phone number or email already exists!");
             return;
         }
+
+        System.out.println(user);
         users.add(user);
         currentUser = user;
         currentMenu = 1;
     }
 
-    public void LogIn(){
+    public void LogIn() {
+        String email, password;
+        System.out.print("Email Address: ");
+        Scanner scanner = new Scanner(System.in);
+        email = scanner.nextLine();
+        System.out.print("Password: ");
+        password = scanner.nextLine();
+        for (User user : users)
+            if (Objects.equals(user.getEmail(), email) && Objects.equals(user.getPassword(), password)) {
+                currentUser = user;
+                currentMenu = 1;
+                return;
+            }
+
+        System.out.println("Info not good try again");
     }
 
     public void landingMenu() {
         if (currentMenu != 0) return;
-        Scanner scanner = new Scanner(System.in);
         final String[] menu1Options = {"Login", "Register", "Exit"};
         int optionsLength = menu1Options.length;
         System.out.print("\033[H\033[2J");
@@ -94,6 +105,7 @@ public final class MainMenu {
         }
 
         System.out.print("\nYour answer: ");
+        Scanner scanner = new Scanner(System.in);
         int input = scanner.nextInt();
 
         switch (input) {
@@ -106,41 +118,85 @@ public final class MainMenu {
     }
 
     public void userInfo() {
+        Scanner scanner = new Scanner(System.in);
         System.out.println(currentUser);
         System.out.println("Type anything to go back...");
-        Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
+        String input = scanner.nextLine();
     }
     public void userAccounts() {
-
+//        display accounts
+//        create new account
+//        te duce in form de creare account in care alegi currenciul
     }
     public void userCards() {
-
+//        display cards
+//        create new card
+//        type card tag
     }
 
-    public void userTransactions() {
-
-    }
-
-    public void userAssets() {
-
-    }
-
-    public void userMenu() {
-        if (currentMenu != 1) return;
-        System.out.println("Logged in as " + currentUser.getFirstName());
+    public void userTransactions() throws IOException {
+//        afisam tranzactiile
+        System.out.println("New Transaction? (Y/N)");
         Scanner scanner = new Scanner(System.in);
-        final String[] menuOptions = {"Account information", "Accounts", "Cards", "Transactions", "Assets", "Exit"};
+        String input = scanner.nextLine();
+        if (input.startsWith("N"))
+            return;
+
+        System.out.println("TO (IBAN): ");
+        String to = scanner.nextLine();
+        System.out.println("AMOUNT: ");
+        Double amount = scanner.nextDouble();
+        currentUser.makeTransaction(to, amount, users);
+    }
+
+    public void displayShares() {
+//        display toate asseturile hardcodate cu indici
+//        scriem indicele assetului pe care vrem sa-l cumparam
+//        zicem cat vrea sa cumpere
+//        gata
+    }
+    public void displayCrypto() {
+//        la fel ca la actiuni
+    }
+    public void displayYourCrypto() {
+//         afisam cat avem din fiecare cryto
+//        apoi intr0un form zicem cat vrem sa stacam, pt indicele uni crypto
+
+    }
+    public void userAssets() {
+//        afisam asseturile
+        System.out.println("1. Buy Shares");
+        System.out.println("2. Buy Crypto");
+        System.out.println("3. Stack Crypto");
+        Scanner scanner = new Scanner(System.in);
+        Integer input = scanner.nextInt();
+        switch (input) {
+            case 1 -> displayShares();
+            case 2 -> displayCrypto();
+            case 3 -> displayYourCrypto();
+            default -> {}
+        }
+
+    }
+
+    public void userMenu() throws IOException {
+        if (currentMenu != 1) return;
+        System.out.println("***************************************************************************************************\n");
+        System.out.println("Logged in as " + currentUser.getFirstName());
+        final String[] menuOptions = {"Account information", "Accounts", "Cards", "Transactions", "Assets", "Vault", "Sign Out"};
         int optionsLength = menuOptions.length;
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
-        System.out.println("***************************************************************************************************\n");
-        for(int i = 0; i < optionsLength; ++i) {
-            System.out.println(i + 1 + "." + menuOptions[i]);
+        for(int i = 0; i <= optionsLength; ++i) {
+            if (i == optionsLength)
+                System.out.println("0. Exit");
+            else
+                System.out.println(i + 1 + "." + menuOptions[i]);
         }
 
         System.out.print("\nYour answer : ");
+        Scanner scanner = new Scanner(System.in);
         int input = scanner.nextInt();
 
         switch (input) {
@@ -149,12 +205,13 @@ public final class MainMenu {
             case 3 -> userCards();
             case 4 -> userTransactions();
             case 5 -> userAssets();
+            case 6 -> currentMenu = 0;
             case 0 -> System.exit(0);
             default -> {
             }
         }
     }
-    public void Menu(){
+    public void Menu() throws IOException{
         while (true) {
             landingMenu();
             userMenu();
