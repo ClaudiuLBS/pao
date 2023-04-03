@@ -13,7 +13,7 @@ public class Main {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException{
 //        System.out.println("Working...");
 //        System.out.println(loan);
 //        System.out.println(c);
