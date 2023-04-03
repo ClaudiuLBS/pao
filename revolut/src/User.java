@@ -206,7 +206,7 @@ public class User {
             "Email: " + email + '\n' +
             "Accounts: " + accounts.size() + '\n' +
             "Cards: " + cards.size() + '\n' +
-            "Transactions" + transactions.size() + '\n' +
+            "Transactions: " + transactions.size() + '\n' +
             "Assets Value: " + getAssetsValue() + '\n' +
             "Balance: " + getBalance() + '\n';
     }
