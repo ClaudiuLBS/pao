@@ -1,6 +1,6 @@
 import java.util.Scanner;
 import java.util.Vector;
-import java.io.Console
+import java.io.Console;
 
 public final class MainMenu {
     private static MainMenu instance;
@@ -39,7 +39,7 @@ public final class MainMenu {
         System.out.print("Phone Number: ");
         user.setPhoneNumber(scanner.nextLine());
 
-        String password = console.readPassword("Password");
+//        String password = console.readPassword("Password");
         System.out.print("Password: ");
         user.setPhoneNumber(scanner.nextLine());
 
@@ -62,53 +62,31 @@ public final class MainMenu {
         Scanner scanner = new Scanner(System.in);
         final String  menu1Options[] = {"Login", "Register", "Exit"};
         int optionsLength = menu1Options.length;
-        int arrowIndex = 0;
-        final String indenter = "\t\t\t\t";
-
         while(true){
 
             System.out.print("\033[H\033[2J");
             System.out.flush();
 
 
-            System.out.println(indenter + "Welcome\n");
-            for(int i = 0; i < optionsLength; ++i){
-                if (i == arrowIndex){
-                    System.out.println(indenter + "->" + menu1Options[i]);
-                }
-                else{
-                    System.out.println(indenter + "  " + menu1Options[i]);
-                }
+            System.out.println("---------------------Welcome---------------------\n");
+
+
+            for(int i = 0; i < optionsLength; ++i) {
+                System.out.println(i + 1 + "." + menu1Options[i]);
             }
+
+            System.out.print("\nYour answer : ");
             int input = scanner.nextInt();
 
             switch (input){
-                //up arrow
-                case 65:
-                    if(arrowIndex > 0){
-                        arrowIndex --;
-                    }
+                case 1:
+                    LogIn();
                     break;
-                //down arrow
-                case 66:
-                    if(arrowIndex + 1 < optionsLength) {
-                        arrowIndex++;
-                    }
+                case 2:
+                    Register();
                     break;
-                case 10:
-                    switch (arrowIndex){
-                        // login
-                        case 0:
-                            LogIn();
-                            break;
-                        // register
-                        case 1:
-                            Register();
-                            break;
-                        //exit
-                        case 2:
-                            System.exit(0);
-                    }
+                case 3:
+                    System.exit(0);
                 default:
                     break;
 
