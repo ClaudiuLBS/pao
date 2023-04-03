@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.security.spec.RSAOtherPrimeInfo;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -198,6 +199,37 @@ public class User {
         return card;
     }
 
+    public void showUserAccounts(){
+        for(Account acc : accounts){
+            System.out.println(acc);
+            System.out.println("***************************************************************************************************");
+        }
+    }
+    public void showUserCards(){
+        for(Card card : cards){
+            System.out.println(card);
+            System.out.println("***************************************************************************************************");
+
+        }
+    }
+
+    public void showUserTransactions(){
+        for(Transaction trn : transactions){
+            System.out.println(trn);
+            System.out.println("***************************************************************************************************");
+
+        }
+    }
+
+    public void showUserAssets() {
+        for (Asset a : assetsOwned.keySet()) {
+            System.out.println(a.getAbbreviation());
+            System.out.println("Balance : " + assetsOwned.get(a));
+            System.out.println("Value : " + assetsOwned.get(a) * a.getValue());
+            System.out.println("***************************************************************************************************");
+        }
+    }
+
     @Override
     public String toString() {
         return
@@ -210,4 +242,5 @@ public class User {
             "Assets Value: " + getAssetsValue() + '\n' +
             "Balance: " + getBalance() + '\n';
     }
+
 }

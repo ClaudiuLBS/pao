@@ -112,25 +112,22 @@ public final class MainMenu {
         scanner.nextLine();
     }
     public void userAccounts() {
-
     }
     public void userCards() {
 
     }
-
     public void userTransactions() {
 
     }
 
     public void userAssets() {
-
     }
 
     public void userMenu() {
         if (currentMenu != 1) return;
         System.out.println("Logged in as " + currentUser.getFirstName());
         Scanner scanner = new Scanner(System.in);
-        final String[] menuOptions = {"Account information", "Accounts", "Cards", "Transactions", "Assets", "Exit"};
+        final String[] menuOptions = {"User info", "Accounts", "Cards", "Transactions", "Assets", "Exit"};
         int optionsLength = menuOptions.length;
         System.out.print("\033[H\033[2J");
         System.out.flush();
