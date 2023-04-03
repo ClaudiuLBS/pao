@@ -23,7 +23,7 @@ public final class MainMenu {
 
         User user = new User();
         Scanner scanner = new Scanner(System.in);
-        String firstName, lastName, email, phone;
+        System.out.print("***************************************************************************************************\n");
 
         System.out.println("Welcome to the registration form!");
         System.out.println("Please enter your information below:");
@@ -40,11 +40,8 @@ public final class MainMenu {
         System.out.print("Phone Number: ");
         user.setPhoneNumber(scanner.nextLine());
 
-//        String password = console.readPassword("Password");
         System.out.print("Password: ");
-        user.setPhoneNumber(scanner.nextLine());
-
-
+        user.setPassword(scanner.nextLine());
 
         // check for
         System.out.println(user);
@@ -72,7 +69,7 @@ public final class MainMenu {
             System.out.println(i + 1 + "." + menu1Options[i]);
         }
 
-        System.out.print("\nYour answer : ");
+        System.out.print("\nYour answer: ");
         int input = scanner.nextInt();
 
         switch (input){

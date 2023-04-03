@@ -12,6 +12,8 @@ public class User {
     private Vector<Account> accounts;
     private Vector<Card> cards;
     private Vector<Transaction> transactions;
+
+    private String password;
     public User() {
 
     }
@@ -21,14 +23,14 @@ public class User {
             String lastName,
             String phoneNumber,
             String address,
-            Boolean premiumAccount,
-
+            String password,
             Map<Asset, Double> assetsOwned) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.assetsOwned = assetsOwned;
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -101,6 +103,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void makeTransaction(String IBAN, Double amount, Vector<User> users) throws IOException {
