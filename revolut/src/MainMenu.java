@@ -5,6 +5,7 @@ import java.io.Console;
 public final class MainMenu {
     private static MainMenu instance;
     private static Vector<User> users;
+    private static Integer currentMenu = 0;
 
     private MainMenu() {
         this.users = new Vector<>();
@@ -48,52 +49,54 @@ public final class MainMenu {
         // check for
         System.out.println(user);
         users.add(user);
-
-
-
+        currentMenu = 1;
     }
 
     public void LogIn(){
 
     }
 
-    public void Menu(){
-
+    public void landingMenu() {
+        if (currentMenu != 0) return;
         Scanner scanner = new Scanner(System.in);
         final String  menu1Options[] = {"Login", "Register", "Exit"};
         int optionsLength = menu1Options.length;
-        while(true){
-
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
 
 
-            System.out.println("---------------------Welcome---------------------\n");
+        System.out.println("---------------------Welcome---------------------\n");
 
 
-            for(int i = 0; i < optionsLength; ++i) {
-                System.out.println(i + 1 + "." + menu1Options[i]);
-            }
-
-            System.out.print("\nYour answer : ");
-            int input = scanner.nextInt();
-
-            switch (input){
-                case 1:
-                    LogIn();
-                    break;
-                case 2:
-                    Register();
-                    break;
-                case 3:
-                    System.exit(0);
-                default:
-                    break;
-
-            }
-
+        for(int i = 0; i < optionsLength; ++i) {
+            System.out.println(i + 1 + "." + menu1Options[i]);
         }
 
+        System.out.print("\nYour answer : ");
+        int input = scanner.nextInt();
+
+        switch (input){
+            case 1:
+                LogIn();
+                break;
+            case 2:
+                Register();
+                break;
+            case 3:
+                System.exit(0);
+            default:
+                break;
+        }
+    }
+
+    public void userMenu() {
+        if (currentMenu != 1) return;
+    }
+    public void Menu(){
+        while (true) {
+            landingMenu();
+            userMenu();
+        }
     }
 
 
