@@ -1,11 +1,11 @@
 public class Vault {
-    private double savings;
+    private Double savings;
 
-    private double savingPerDay;
+    private Double savingPerDay;
 
     public Vault() {
-        this.savings = 0;
-        this.savingPerDay = 0;
+        this.savings = 0.0;
+        this.savingPerDay = 0.0;
     }
 
     public Vault(double savings, double savingPerDay) {
@@ -13,7 +13,7 @@ public class Vault {
         this.savingPerDay = savingPerDay;
     }
 
-    public double getSavings() {
+    public Double getSavings() {
         return savings;
     }
     public void setSavings(double savings) {
@@ -25,7 +25,13 @@ public class Vault {
         return "Balance :" + savings +
                 "Savings/day=" + savingPerDay;
     }
-    public double getSavingPerDay() {
+    public Double getSavingPerDay() {
         return savingPerDay;
     }
+
+    public void addToSavings(Double sum){
+        this.savings += sum;
+    }
+
+
 }
