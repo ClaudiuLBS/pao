@@ -1,7 +1,9 @@
 import java.io.IOException;
-import java.security.spec.RSAOtherPrimeInfo;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class User {
     private String firstName;
@@ -13,7 +15,12 @@ public class User {
     private Vector<Card> cards;
     private Vector<Transaction> transactions;
 
+    private Vault vault;
+
     private String password;
+
+    private Timer timer;
+
     public User() {
         this.accounts = new Vector<>();
         this.createAccount(Currency.getInstance(new Locale("ro", "RO")));
@@ -21,6 +28,9 @@ public class User {
         this.createCard("Default", 0.0);
         this.transactions = new Vector<>();
         this.assetsOwned = new HashMap<>();
+        this.vault = new Vault();
+        this.timer = new Timer();
+        startTimer();
     }
 
     public User(
@@ -34,7 +44,18 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.assetsOwned = assetsOwned;
         this.password = password;
+        this.accounts = new Vector<>();
+        this.createAccount(Currency.getInstance(new Locale("ro", "RO")));
+        this.cards = new Vector<>();
+        this.createCard("Default", 0.0);
+        this.transactions = new Vector<>();
+        this.assetsOwned = new HashMap<>();
+        this.vault = new Vault();
+        this.timer = new Timer();
+        startTimer();
+
     }
+
 
     public String getFirstName() {
         return firstName;
@@ -234,6 +255,50 @@ public class User {
         }
     }
 
+    public void saveToVault(){
+        Double svpd = vault.getSavingPerDay();
+        if(getBalance() > svpd){
+            for (Account a : accounts){
+                if (svpd == 0.0){
+                    break;
+                }
+                else{
+                    if(a.getBalance() < svpd){
+                        svpd -= a.getBalance();
+                        vault.addToSavings(a.getBalance());
+                        a.setBalance(0.0);
+                    }
+                    else{
+                        vault.addToSavings(svpd);
+                        a.withdraw(svpd);
+                        svpd = 0.0;
+                    }
+                }
+            }
+        }
+    }
+
+    private void startTimer(){
+        timer.scheduleAtFixedRate(new SaveToVault(), 0, 24 * 60 * 60 * 1000); //24 de ore
+    }
+
+    private class SaveToVault extends TimerTask{
+        @Override
+        public void run(){
+            User.this.saveToVault();
+        }
+    }
+    public void withdraw(Double amount){
+        if (amount > vault.getSavings()){
+            System.out.println("I regret to inform you that currently, there are not enough funds available in the vault.");
+        }
+        else{
+            vault.setSavings(vault.getSavings() - amount);
+            accounts.get(0).deposit(amount);
+        }
+    }
+
+
     @Override
     public String toString() {
         return
@@ -246,5 +311,7 @@ public class User {
             "Assets Value: " + getAssetsValue() + '\n' +
             "Balance: " + getBalance() + '\n';
     }
+
+
 
 }
