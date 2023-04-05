@@ -38,7 +38,7 @@ public final class MainMenu {
     public void Register() {
         User user = new User();
         boolean registerCheck;
-        System.out.print("***************************************************************************************************\n");
+        System.out.print("******************************2*********************************************************************\n");
 
         System.out.println("Welcome to the registration form!");
         System.out.println("Please enter your information below:");
