@@ -1,7 +1,5 @@
 import java.io.IOException;
-import java.util.Objects;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
 
 public final class MainMenu {
     private static MainMenu instance;
@@ -28,6 +26,12 @@ public final class MainMenu {
         this.users = new Vector<>();
     }
 
+    public void pressEnterToContinue() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Press Enter to continue...");
+        scanner.nextLine();
+
+    }
     public static MainMenu getInstance(){
         if(instance == null){
             instance = new MainMenu();
@@ -66,7 +70,6 @@ public final class MainMenu {
             return;
         }
 
-        System.out.println(user);
         users.add(user);
         currentUser = user;
         currentMenu = 1;
@@ -93,8 +96,6 @@ public final class MainMenu {
         if (currentMenu != 0) return;
         final String[] menu1Options = {"Login", "Register", "Exit"};
         int optionsLength = menu1Options.length;
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
 
 
         System.out.println("---------------------Welcome---------------------\n");
@@ -120,33 +121,65 @@ public final class MainMenu {
     public void userInfo() {
         Scanner scanner = new Scanner(System.in);
         System.out.println(currentUser);
-        System.out.println("Type anything to go back...");
-        String input = scanner.nextLine();
+        pressEnterToContinue();
     }
+
     public void userAccounts() {
-//        display accounts
-//        create new account
-//        te duce in form de creare account in care alegi currenciul
+        currentUser.showUserAccounts();
+        System.out.print("\nCreate new account? (Y/N)\n> ");
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        if (!input.toLowerCase().startsWith("y"))
+            return;
+
+        final String[] currencies = {"USD", "EUR", "GBP", "RON"};
+        System.out.println("Pick currency: ");
+        for (int i = 0; i < currencies.length; i++) {
+            System.out.println(i + 1 + ". " + currencies[i]);
+        }
+        System.out.print("> ");
+        int currencyIndex = scanner.nextInt() - 1;
+        scanner.nextLine();
+        var account =  currentUser.createAccount(Currency.getInstance(currencies[currencyIndex]));
+        System.out.println("Account successfully created with IBAN '" + account.getIBAN()  + "'.");
+        pressEnterToContinue();
     }
+
     public void userCards() {
-//        display cards
-//        create new card
-//        type card tag
+        currentUser.showUserCards();
+        System.out.print("\nCreate new card? (Y/N)\n> ");
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        if (!input.toLowerCase().startsWith("y"))
+            return;
+        System.out.print("Enter card tag: ");
+        String tag = scanner.nextLine();
+        System.out.print("Enter card limit (0 for no limit): ");
+        Double limit = scanner.nextDouble();
+        currentUser.createCard(tag, limit);
+        System.out.println("Card successfully created with tag '" + tag + "' and limit '" + limit + "'.");
+        pressEnterToContinue();
     }
 
     public void userTransactions() throws IOException {
-//        afisam tranzactiile
+        currentUser.showUserTransactions();
         System.out.println("New Transaction? (Y/N)");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-        if (input.startsWith("N"))
+        if (!input.toLowerCase().startsWith("y"))
             return;
 
-        System.out.println("TO (IBAN): ");
+        System.out.print("TO (IBAN): ");
         String to = scanner.nextLine();
-        System.out.println("AMOUNT: ");
+        System.out.print("AMOUNT: ");
         Double amount = scanner.nextDouble();
-        currentUser.makeTransaction(to, amount, users);
+
+        try {
+            currentUser.makeTransaction(to, amount, users);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            pressEnterToContinue();
+        }
     }
 
     public void displayShares() {
@@ -169,7 +202,7 @@ public final class MainMenu {
         System.out.println("2. Buy Crypto");
         System.out.println("3. Stack Crypto");
         Scanner scanner = new Scanner(System.in);
-        Integer input = scanner.nextInt();
+        int input = scanner.nextInt();
         switch (input) {
             case 1 -> displayShares();
             case 2 -> displayCrypto();
@@ -178,24 +211,32 @@ public final class MainMenu {
         }
 
     }
+    public void userVault() {
+
+    }
+
+    public void userWithdraw() {
+
+    }
+
+    public void userDeposit() {
+
+    }
 
     public void userMenu() throws IOException {
         if (currentMenu != 1) return;
-        System.out.println("***************************************************************************************************\n");
-        System.out.println("Logged in as " + currentUser.getFirstName());
-        final String[] menuOptions = {"Account information", "Accounts", "Cards", "Transactions", "Assets", "Vault", "Sign Out"};
+        System.out.println("\nLogged in as " + currentUser.getFirstName());
+        final String[] menuOptions = {"User Information", "Accounts", "Cards", "Transactions", "Assets", "Vault", "Withdraw", "Deposit", "Sign Out"};
         int optionsLength = menuOptions.length;
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
 
         for(int i = 0; i <= optionsLength; ++i) {
             if (i == optionsLength)
                 System.out.println("0. Exit");
             else
-                System.out.println(i + 1 + "." + menuOptions[i]);
+                System.out.println(i + 1 + ". " + menuOptions[i]);
         }
 
-        System.out.print("\nYour answer : ");
+        System.out.print("> ");
         Scanner scanner = new Scanner(System.in);
         int input = scanner.nextInt();
 
@@ -205,7 +246,10 @@ public final class MainMenu {
             case 3 -> userCards();
             case 4 -> userTransactions();
             case 5 -> userAssets();
-            case 6 -> currentMenu = 0;
+            case 6 -> userVault();
+            case 7 -> userWithdraw();
+            case 8 -> userDeposit();
+            case 9 -> currentMenu = 0;
             case 0 -> System.exit(0);
             default -> {
             }

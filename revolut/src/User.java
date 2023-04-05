@@ -200,15 +200,19 @@ public class User {
     }
 
     public void showUserAccounts(){
+        System.out.println("ACCOUNTS: ");
         for(Account acc : accounts){
+            if (acc != accounts.get(0))
+                System.out.println("\n***************************************************************************************************");
             System.out.println(acc);
-            System.out.println("***************************************************************************************************");
         }
     }
     public void showUserCards(){
+        System.out.println("CARDS: ");
         for(Card card : cards){
+            if (card != cards.get(0))
+                System.out.println("\n***************************************************************************************************");
             System.out.println(card);
-            System.out.println("***************************************************************************************************");
 
         }
     }

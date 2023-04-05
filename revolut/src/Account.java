@@ -49,8 +49,6 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account information\n" +
-                "\nIBAN : " + IBAN + '\n' +
-                "\nCurrency : " + currency;
+        return "\nIBAN : " + IBAN + "\nCurrency : " + currency + "\nBalance: "  + getBalance();
     }
 }

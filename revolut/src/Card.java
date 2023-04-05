@@ -58,8 +58,7 @@ public class Card {
 
     @Override
     public String toString() {
-        return  "Card information" +
-                "\nTag : '" + tag +
+        return  "\nTag: " + tag +
                 "\nNumber : " + number +
                 "\nCVV : " + CVV +
                 "\nLimit : " + limit;
