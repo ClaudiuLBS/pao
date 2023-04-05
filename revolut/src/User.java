@@ -142,6 +142,11 @@ public class User {
             value += a.value * assetsOwned.get(a);
         return value;
     }
+
+    public void terminateAccount(Account acc) {
+        accounts.remove(acc);
+    }
+
     public void makeTransaction(String IBAN, Double amount, Vector<User> users) throws IOException {
         Double tax = amount * 0.05;
         Account senderAccount = null;
@@ -161,7 +166,7 @@ public class User {
         for (User user : users) {
             for (Account account : user.accounts) {
                 if (Objects.equals(account.getIBAN(), IBAN)) {
-                    user.accounts.get(0).deposit(amount);
+                    account.deposit(amount);
                     user.transactions.add(transaction);
                     break;
                 }
@@ -223,10 +228,11 @@ public class User {
     public void showUserAccounts(){
         System.out.println("ACCOUNTS: ");
         for(Account acc : accounts){
-            if (acc != accounts.get(0))
-                System.out.println("\n***************************************************************************************************");
-            System.out.println(acc);
+            System.out.println(accounts.indexOf(acc) + 1 + ".");
+            System.out.println(acc + "\n");
         }
+        System.out.println(accounts.size() + 1 + ". Create new Account");
+        System.out.println("0. Back");
     }
     public void showUserCards(){
         System.out.println("CARDS: ");

@@ -124,25 +124,74 @@ public final class MainMenu {
         pressEnterToContinue();
     }
 
-    public void userAccounts() {
-        currentUser.showUserAccounts();
-        System.out.print("\nCreate new account? (Y/N)\n> ");
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        if (!input.toLowerCase().startsWith("y"))
-            return;
-
-        final String[] currencies = {"USD", "EUR", "GBP", "RON"};
-        System.out.println("Pick currency: ");
-        for (int i = 0; i < currencies.length; i++) {
-            System.out.println(i + 1 + ". " + currencies[i]);
+    public void accountMenu(int accIndex) {
+        System.out.println("ACCOUNT " + accIndex + "\n");
+        var acc = currentUser.getAccounts().get(accIndex);
+        System.out.println(acc + "\n");
+        String[] menuOptions = {"Withdraw", "Deposit", "Terminate"};
+        for (int i = 0; i < menuOptions.length; i++) {
+            System.out.println(i + 1 + ". " + menuOptions[i]);
         }
+        System.out.println("0. Back");
         System.out.print("> ");
-        int currencyIndex = scanner.nextInt() - 1;
-        scanner.nextLine();
-        var account =  currentUser.createAccount(Currency.getInstance(currencies[currencyIndex]));
-        System.out.println("Account successfully created with IBAN '" + account.getIBAN()  + "'.");
-        pressEnterToContinue();
+        Scanner scanner = new Scanner(System.in);
+        var input = scanner.nextInt();
+        if (input == 0 || input > menuOptions.length) {
+            currentMenu = 2;
+            return;
+        }
+        if (input == 3) {
+            currentUser.terminateAccount(acc);
+            System.out.println("Successfully terminated account " + accIndex);
+            pressEnterToContinue();
+            return;
+        }
+
+        System.out.print("Amount: ");
+        var amount = scanner.nextDouble();
+        if (input == 1) {
+            try {
+                acc.withdraw(amount);
+                System.out.println("Successfully withdrawn " + amount + " from account " + accIndex);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            pressEnterToContinue();
+        } else if (input == 2) {
+            acc.deposit(amount);
+            System.out.println("Successfully deposited " + amount + " from account " + accIndex);
+            pressEnterToContinue();
+        }
+    }
+
+    public void userAccounts() {
+        if (currentMenu != 2) return;
+
+        currentUser.showUserAccounts();
+        System.out.print("\nPick an account or an action:\n> ");
+        Scanner scanner = new Scanner(System.in);
+        var input = scanner.nextInt();
+
+        if (input == 0 || input > currentUser.getAccounts().size() + 1) {
+            currentMenu = 1;
+            return;
+        }
+
+        if (input == currentUser.getAccounts().size() + 1) {
+            final String[] currencies = {"USD", "EUR", "GBP", "RON"};
+            System.out.println("Pick currency: ");
+            for (int i = 0; i < currencies.length; i++) {
+                System.out.println(i + 1 + ". " + currencies[i]);
+            }
+            System.out.print("> ");
+            int currencyIndex = scanner.nextInt() - 1;
+            scanner.nextLine();
+            var account =  currentUser.createAccount(Currency.getInstance(currencies[currencyIndex]));
+            System.out.println("Account successfully created with IBAN '" + account.getIBAN()  + "'.");
+            pressEnterToContinue();
+            return;
+        }
+        accountMenu(input - 1);
     }
 
     public void userCards() {
@@ -176,10 +225,11 @@ public final class MainMenu {
 
         try {
             currentUser.makeTransaction(to, amount, users);
+            System.out.println("Successfully sent " + amount + " to " + to + ".");
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            pressEnterToContinue();
         }
+        pressEnterToContinue();
     }
 
     public void displayShares() {
@@ -215,18 +265,11 @@ public final class MainMenu {
 
     }
 
-    public void userWithdraw() {
-
-    }
-
-    public void userDeposit() {
-
-    }
 
     public void userMenu() throws IOException {
         if (currentMenu != 1) return;
         System.out.println("\nLogged in as " + currentUser.getFirstName());
-        final String[] menuOptions = {"User Information", "Accounts", "Cards", "Transactions", "Assets", "Vault", "Withdraw", "Deposit", "Sign Out"};
+        final String[] menuOptions = {"User Information", "Accounts", "Cards", "Transactions", "Assets", "Vault", "Sign Out"};
         int optionsLength = menuOptions.length;
 
         for(int i = 0; i <= optionsLength; ++i) {
@@ -242,14 +285,12 @@ public final class MainMenu {
 
         switch (input) {
             case 1 -> userInfo();
-            case 2 -> userAccounts();
+            case 2 -> currentMenu = 2;
             case 3 -> userCards();
             case 4 -> userTransactions();
             case 5 -> userAssets();
             case 6 -> userVault();
-            case 7 -> userWithdraw();
-            case 8 -> userDeposit();
-            case 9 -> currentMenu = 0;
+            case 7 -> currentMenu = 0;
             case 0 -> System.exit(0);
             default -> {
             }
@@ -257,8 +298,9 @@ public final class MainMenu {
     }
     public void Menu() throws IOException{
         while (true) {
-            landingMenu();
-            userMenu();
+            landingMenu(); // 0
+            userMenu(); // 1
+            userAccounts(); // 2
         }
     }
 

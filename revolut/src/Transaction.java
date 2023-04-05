@@ -61,11 +61,10 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction" +
-                "\nSenderIBAN : " + senderIBAN +
-                "\nReceiverIBAN : " + receiverIBAN +
-                "\nAmount : " + amount +
-                "\nTax : " + tax +
-                "\nDate : " + date;
+        return "SenderIBAN: " + senderIBAN +
+                "\nReceiverIBAN: " + receiverIBAN +
+                "\nAmount: " + amount +
+                "\nTax: " + tax +
+                "\nDate: " + date;
     }
 }
