@@ -301,7 +301,15 @@ public class User {
         stakedAmount.put(crypto, stakedAmount.getOrDefault(crypto, 0.0) + amount);
         System.out.println("Successfully staked " + amount + " " + crypto.abbreviation);
     }
-    
+    public void withdrawCrypto(CryptoCurrency crypto, Double amount) {
+        if (stakedAmount.getOrDefault(crypto, 0.0) < amount) {
+            System.out.println("Not enough crypto to withdraw.");
+            return;
+        }
+        stakedAmount.put(crypto, stakedAmount.getOrDefault(crypto, 0.0) - amount);
+        assetsOwned.put(crypto, assetsOwned.getOrDefault(crypto, 0.0) + amount);
+        System.out.println("Successfully withdrawn " + amount + " " + crypto.abbreviation);
+    }
     public void showUserAssets() {
         showShares();
         showCrypto(false, true);
@@ -333,17 +341,16 @@ public class User {
     private void getCryptoStaking(){
         for(Map.Entry<CryptoCurrency, Double> crypto : stakedAmount.entrySet()) {
             double stakeRate = crypto.getKey().getStakingReturn();
-            double stakedAmount = crypto.getValue();
-            crypto.setValue(stakedAmount * stakeRate);
+            stakedAmount.put(crypto.getKey(), crypto.getValue() + crypto.getValue() * stakeRate);
         }
     }
 
 
     private void startTimer(){
 //        timer.scheduleAtFixedRate(new SaveToVault(), 0, 24 * 60 * 60 * 1000); //24 de ore
-        vaultTimer.scheduleAtFixedRate(new SaveToVault(), 0, 5 * 1000); //24 de ore
+        vaultTimer.scheduleAtFixedRate(new SaveToVault(), 0, 5 * 1000); //5 secunde
 //        cryptoTimer.scheduleAtFixedRate(new GetCryptoStaking(), 0, 30 * 24 * 60 * 60 * 1000); //30 de zile
-        cryptoTimer.scheduleAtFixedRate(new SaveToVault(), 0, 10 * 1000); //24 de ore
+        cryptoTimer.scheduleAtFixedRate(new GetCryptoStaking(), 0, 10 * 1000); //10 secunde
 
     }
 

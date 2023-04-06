@@ -6,18 +6,18 @@ public final class MainMenu {
     private static Vector<User> users;
     private static Integer currentMenu = 0;
     private static final Share[] availableCompanies = {
-        new Share("Apple Inc.", "AAPL", 568.20, 0.64),
+        new Share("Apple Inc.", "AAPL", 568.20, 0.0064),
         new Share("Amazon.com Inc.", "AMZN", 3749.80, 0.0),
-        new Share("Microsoft Corporation", "MSFT", 397.30, 0.80),
+        new Share("Microsoft Corporation", "MSFT", 397.30, 0.008),
         new Share("Facebook, Inc.", "FB", 303.2, 0.0),
         new Share("Alphabet Inc.", "GOOGL", 2237.50, 0.0)
     };
     private static final CryptoCurrency[] availableCrypto = {
-        new CryptoCurrency("Ethereum", "ETH", 3683.43, 6.6),
-        new CryptoCurrency("Cardano", "ADA", 3.01, 5.3),
-        new CryptoCurrency("Polkadot", "DOT", 59.52, 13.5),
-        new CryptoCurrency("Solana", "SOL", 264.10, 8.5),
-        new CryptoCurrency("Binance Coin", "BNB", 812.15, 9.1),
+        new CryptoCurrency("Ethereum", "ETH", 3683.43, 0.066),
+        new CryptoCurrency("Cardano", "ADA", 3.01, 0.053),
+        new CryptoCurrency("Polkadot", "DOT", 59.52, 0.135),
+        new CryptoCurrency("Solana", "SOL", 264.10, 0.085),
+        new CryptoCurrency("Binance Coin", "BNB", 812.15, 0.091),
     };
     private boolean search(String where, String what) {
         switch (where) {
@@ -165,14 +165,14 @@ public final class MainMenu {
         if (input == 1) {
             try {
                 acc.withdraw(amount);
-                System.out.println("Successfully withdrawn " + amount + " from account " + accIndex + 1);
+                System.out.println("Successfully withdrawn " + amount + " from account " + (accIndex + 1));
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
             pressEnterToContinue();
         } else if (input == 2) {
             acc.deposit(amount);
-            System.out.println("Successfully deposited " + amount + " from account " + accIndex + 1);
+            System.out.println("Successfully deposited " + amount + " to account " + (accIndex + 1));
             pressEnterToContinue();
         }
     }
@@ -281,21 +281,24 @@ public final class MainMenu {
         }
         pressEnterToContinue();
     }
-    public void displayYourCrypto() {
+    public void displayYourCrypto(boolean stack) {
         var ownedCrypto = currentUser.showCrypto(true, true);
         System.out.print("> ");
         Scanner scanner = new Scanner(System.in);
         var cryptoIdx = scanner.nextInt() - 1;
         System.out.print("Amount: ");
         Double amount = scanner.nextDouble();
-        currentUser.stackCrypto(ownedCrypto.get(cryptoIdx), amount);
+
+        if (stack) currentUser.stackCrypto(ownedCrypto.get(cryptoIdx), amount);
+        else currentUser.withdrawCrypto(ownedCrypto.get(cryptoIdx), amount);
+
         pressEnterToContinue();
     }
     public void assetsMenu() {
         if (currentMenu != 3) return;
         currentUser.showUserAssets();
 
-        String[] menuOptions = {"Buy Shares", "Buy Crypto", "Stack Crypto"};
+        String[] menuOptions = {"Buy Shares", "Buy Crypto", "Stack Crypto", "Withdraw Crypto"};
         for (int i = 0; i < menuOptions.length; i++)
             System.out.println(i + 1 + ". " + menuOptions[i]);
         System.out.println("0. Back");
@@ -307,7 +310,8 @@ public final class MainMenu {
         switch (input) {
             case 1 -> displayShares();
             case 2 -> displayCrypto();
-            case 3 -> displayYourCrypto();
+            case 3 -> displayYourCrypto(true);
+            case 4 -> displayYourCrypto(false);
             case 0 -> currentMenu = 1;
             default -> {}
         }
