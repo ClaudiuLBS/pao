@@ -53,7 +53,6 @@ public class User {
         this.vault = new Vault();
         this.timer = new Timer();
         startTimer();
-
     }
 
 
@@ -256,7 +255,8 @@ public class User {
     public void showUserAssets() {
         System.out.println("Shares:");
         for (Asset a : assetsOwned.keySet()) {
-            if (a instanceof CryptoCurrency) return;
+            if (a instanceof CryptoCurrency) continue;
+            System.out.println("***************************************************************************************************");
             System.out.println(a.getAbbreviation());
             System.out.println("Balance : " + assetsOwned.get(a));
             System.out.println("Value : " + assetsOwned.get(a) * a.getValue());
@@ -264,7 +264,8 @@ public class User {
         }
         System.out.println("Crypto:");
         for (Asset a : assetsOwned.keySet()) {
-            if (a instanceof Share) return;
+            if (a instanceof Share) continue;
+            System.out.println("***************************************************************************************************");
             System.out.println(a.getAbbreviation());
             System.out.println("Balance : " + assetsOwned.get(a));
             System.out.println("Value : " + assetsOwned.get(a) * a.getValue());
