@@ -296,6 +296,10 @@ public class User {
         }
     }
 
+    private void getCryptoStaking(){
+
+    }
+
     private void startTimer(){
 //        timer.scheduleAtFixedRate(new SaveToVault(), 0, 24 * 60 * 60 * 1000); //24 de ore
         timer.scheduleAtFixedRate(new SaveToVault(), 0, 5 * 1000); //24 de ore
@@ -305,6 +309,13 @@ public class User {
         @Override
         public void run(){
             User.this.saveToVault();
+        }
+    }
+
+    private class GetCryptoStaking extends TimerTask{
+        @Override
+        public void run(){
+            User.this.getCryptoStaking();
         }
     }
     public void withdrawFromVault(Double amount){
