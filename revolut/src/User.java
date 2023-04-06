@@ -288,7 +288,7 @@ public class User {
             User.this.saveToVault();
         }
     }
-    public void withdraw(Double amount){
+    public void withdrawFromVault(Double amount){
         if (amount > vault.getSavings()){
             System.out.println("I regret to inform you that currently, there are not enough funds available in the vault.");
         }
@@ -298,6 +298,9 @@ public class User {
         }
     }
 
+    public Vault getVault(){
+        return vault;
+    }
 
     @Override
     public String toString() {

@@ -105,7 +105,7 @@ public final class MainMenu {
             System.out.println(i + 1 + "." + menu1Options[i]);
         }
 
-        System.out.print("\nYour answer: ");
+        System.out.print("\n>: ");
         Scanner scanner = new Scanner(System.in);
         int input = scanner.nextInt();
 
@@ -119,7 +119,6 @@ public final class MainMenu {
     }
 
     public void userInfo() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println(currentUser);
         pressEnterToContinue();
     }
@@ -133,7 +132,7 @@ public final class MainMenu {
             return;
 
         final String[] currencies = {"USD", "EUR", "GBP", "RON"};
-        System.out.println("Pick currency: ");
+        System.out.println("Select currency: ");
         for (int i = 0; i < currencies.length; i++) {
             System.out.println(i + 1 + ". " + currencies[i]);
         }
@@ -212,8 +211,46 @@ public final class MainMenu {
 
     }
     public void userVault() {
+        System.out.println("1. Vault info");
+        System.out.println("2. Change the amount saved each day");
+        System.out.println("3. Withdraw");
+
+        Scanner scanner = new Scanner(System.in);
+        int input = scanner.nextInt();
+        switch (input) {
+            case 1 -> System.out.println(currentUser.getVault());
+            case 2 -> setVaultSpd();
+            case 3 -> withdrawVault();
+            default -> {}
+        }
+
 
     }
+    public void setVaultSpd(){
+        System.out.println("Your current amount saved each day : " + currentUser.getVault().getSavingPerDay());
+        System.out.println("The new amount : ");
+
+        Scanner scanner = new Scanner(System.in);
+        double input = scanner.nextDouble();
+        currentUser.getVault().setSavings(input);
+        currentMenu = 1;
+    }
+
+    public void withdrawVault(){
+        System.out.println("Balance : " + currentUser.getVault().getSavingPerDay());
+        System.out.println("Amount : ");
+
+        Scanner scanner = new Scanner(System.in);
+        double input = scanner.nextDouble();
+        double balance = currentUser.getVault().getSavings();
+        if(input <= balance) {
+            currentUser.getAccounts().get(0).deposit(input);
+            currentUser.getVault().setSavings(balance - input);
+            currentMenu = 1;
+        }
+    }
+
+
 
     public void userWithdraw() {
 
