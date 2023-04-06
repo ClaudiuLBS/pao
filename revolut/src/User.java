@@ -17,7 +17,8 @@ public class User {
     private Vector<Transaction> transactions;
     private Vault vault;
     private String password;
-    private Timer timer;
+    private Timer vaultTimer;
+    private Timer cryptoTimer;
 
     public User() {
         this.accounts = new Vector<>();
@@ -28,7 +29,8 @@ public class User {
         this.assetsOwned = new HashMap<>();
         this.stakedAmount = new TreeMap<>();
         this.vault = new Vault();
-        this.timer = new Timer();
+        this.cryptoTimer = new Timer();
+        this.vaultTimer = new Timer();
         startTimer();
     }
 
@@ -50,7 +52,8 @@ public class User {
         this.transactions = new Vector<>();
         this.assetsOwned = new HashMap<>();
         this.vault = new Vault();
-        this.timer = new Timer();
+        this.cryptoTimer = new Timer();
+        this.vaultTimer = new Timer();
         startTimer();
     }
 
@@ -304,12 +307,20 @@ public class User {
     }
 
     private void getCryptoStaking(){
-
+        for(Map.Entry<CryptoCurrency, Double> crypto : stakedAmount.entrySet()) {
+            double stakeRate = crypto.getKey().getStakingReturn();
+            double stakedAmount = crypto.getValue();
+            crypto.setValue(stakedAmount * stakeRate);
+        }
     }
+
 
     private void startTimer(){
 //        timer.scheduleAtFixedRate(new SaveToVault(), 0, 24 * 60 * 60 * 1000); //24 de ore
-        timer.scheduleAtFixedRate(new SaveToVault(), 0, 5 * 1000); //24 de ore
+        vaultTimer.scheduleAtFixedRate(new SaveToVault(), 0, 5 * 1000); //24 de ore
+//        cryptoTimer.scheduleAtFixedRate(new GetCryptoStaking(), 0, 30 * 24 * 60 * 60 * 1000); //30 de zile
+        cryptoTimer.scheduleAtFixedRate(new SaveToVault(), 0, 10 * 1000); //24 de ore
+
     }
 
     private class SaveToVault extends TimerTask{
