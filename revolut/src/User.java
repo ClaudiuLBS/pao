@@ -11,14 +11,12 @@ public class User {
     private String phoneNumber;
     private String email;
     private Map<Asset, Double> assetsOwned;
+    private SortedMap<CryptoCurrency, Double> stackedAmount;
     private Vector<Account> accounts;
     private Vector<Card> cards;
     private Vector<Transaction> transactions;
-
     private Vault vault;
-
     private String password;
-
     private Timer timer;
 
     public User() {
@@ -28,6 +26,7 @@ public class User {
         this.createCard("Default", 0.0);
         this.transactions = new Vector<>();
         this.assetsOwned = new HashMap<>();
+        this.stackedAmount = new TreeMap<>();
         this.vault = new Vault();
         this.timer = new Timer();
         startTimer();
@@ -126,6 +125,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public SortedMap<CryptoCurrency, Double> getStackedAmount() {
+        return stackedAmount;
+    }
+
+    public void setStackedAmount(SortedMap<CryptoCurrency, Double> stackedAmount) {
+        this.stackedAmount = stackedAmount;
     }
 
     public Double getBalance() {
