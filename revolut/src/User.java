@@ -175,14 +175,15 @@ public class User {
 
     }
 
-    public void buyAsset(Asset asset, Double amount) throws IOException{
+    public void buyAsset(Asset asset, Double amount) {
         for (Account account : this.accounts) {
             if (account.getBalance() >= asset.getValue() * amount) {
                 account.withdraw(asset.getValue() * amount);
                 this.assetsOwned.put(asset, this.assetsOwned.getOrDefault(asset, 0.0) + amount);
+                return;
             }
         }
-        throw new IOException("I'm sorry, but it seems that your current financial situation does not allow for the purchase of this item at this time. Perhaps it would be best to consider more affordable options or save up for the future.");
+        throw new RuntimeException("I'm sorry, but it seems that your current financial situation does not allow for the purchase of this item at this time. Perhaps it would be best to consider more affordable options or save up for the future.");
     }
 
     public void sellAsset(Asset asset, Double amount) throws IOException{
@@ -253,7 +254,17 @@ public class User {
     }
 
     public void showUserAssets() {
+        System.out.println("Shares:");
         for (Asset a : assetsOwned.keySet()) {
+            if (a instanceof CryptoCurrency) return;
+            System.out.println(a.getAbbreviation());
+            System.out.println("Balance : " + assetsOwned.get(a));
+            System.out.println("Value : " + assetsOwned.get(a) * a.getValue());
+            System.out.println("***************************************************************************************************");
+        }
+        System.out.println("Crypto:");
+        for (Asset a : assetsOwned.keySet()) {
+            if (a instanceof Share) return;
             System.out.println(a.getAbbreviation());
             System.out.println("Balance : " + assetsOwned.get(a));
             System.out.println("Value : " + assetsOwned.get(a) * a.getValue());

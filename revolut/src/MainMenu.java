@@ -5,7 +5,20 @@ public final class MainMenu {
     private static MainMenu instance;
     private static Vector<User> users;
     private static Integer currentMenu = 0;
-
+    private static final Share[] availableCompanies = {
+        new Share("Apple Inc.", "AAPL", 568.20, 0.64),
+        new Share("Amazon.com Inc.", "AMZN", 3749.80, 0.0),
+        new Share("Microsoft Corporation", "MSFT", 397.30, 0.80),
+        new Share("Facebook, Inc.", "FB", 303.2, 0.0),
+        new Share("Alphabet Inc.", "GOOGL", 2237.50, 0.0)
+    };
+    private static final CryptoCurrency[] availableCrypto = {
+        new CryptoCurrency("Ethereum", "ETH", 3683.43, 6.6),
+        new CryptoCurrency("Cardano", "ADA", 3.01, 5.3),
+        new CryptoCurrency("Polkadot", "DOT", 59.52, 13.5),
+        new CryptoCurrency("Solana", "SOL", 264.10, 8.5),
+        new CryptoCurrency("Binance Coin", "BNB", 812.15, 9.1),
+    };
     private boolean search(String where, String what) {
         switch (where) {
             case "email":
@@ -23,7 +36,7 @@ public final class MainMenu {
     }
     private User currentUser;
     private MainMenu() {
-        this.users = new Vector<>();
+        users = new Vector<>();
     }
 
     public void pressEnterToContinue() {
@@ -164,7 +177,7 @@ public final class MainMenu {
         }
     }
 
-    public void userAccounts() {
+    public void accountsMenu() {
         if (currentMenu != 2) return;
 
         currentUser.showUserAccounts();
@@ -233,30 +246,64 @@ public final class MainMenu {
     }
 
     public void displayShares() {
-//        display toate asseturile hardcodate cu indici
-//        scriem indicele assetului pe care vrem sa-l cumparam
-//        zicem cat vrea sa cumpere
-//        gata
+        for (int i = 0; i < availableCompanies.length; i++) {
+            System.out.println(i + 1 + ". " + availableCompanies[i].name + " | " + availableCompanies[i].value + "$ ");
+        }
+        System.out.print("> ");
+        Scanner scanner = new Scanner(System.in);
+        var companyIdx = scanner.nextInt() - 1;
+        System.out.print("amount: ");
+        var amount = scanner.nextDouble();
+
+        try {
+            currentUser.buyAsset(availableCompanies[companyIdx], amount);
+            System.out.println("Successfully bought " + amount + " " + availableCompanies[companyIdx].abbreviation + " shares.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        pressEnterToContinue();
     }
     public void displayCrypto() {
-//        la fel ca la actiuni
+        for (int i = 0; i < availableCrypto.length; i++) {
+            System.out.println(i + 1 + ". " + availableCrypto[i].name + " | " + availableCrypto[i].value + "$ ");
+        }
+        System.out.print("> ");
+        Scanner scanner = new Scanner(System.in);
+        var companyIdx = scanner.nextInt() - 1;
+        System.out.print("amount: ");
+        var amount = scanner.nextDouble();
+
+        try {
+            currentUser.buyAsset(availableCrypto[companyIdx], amount);
+            System.out.println("Successfully bought " + amount + " " + availableCrypto[companyIdx].abbreviation + " crypto.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        pressEnterToContinue();
     }
     public void displayYourCrypto() {
 //         afisam cat avem din fiecare cryto
 //        apoi intr0un form zicem cat vrem sa stacam, pt indicele uni crypto
 
     }
-    public void userAssets() {
-//        afisam asseturile
-        System.out.println("1. Buy Shares");
-        System.out.println("2. Buy Crypto");
-        System.out.println("3. Stack Crypto");
+    public void assetsMenu() {
+        if (currentMenu != 3) return;
+        currentUser.showUserAssets();
+
+        String[] menuOptions = {"Buy Shares", "Buy Crypto", "Stack Crypto"};
+        for (int i = 0; i < menuOptions.length; i++)
+            System.out.println(i + 1 + ". " + menuOptions[i]);
+        System.out.println("0. Back");
+        System.out.print("> ");
+
         Scanner scanner = new Scanner(System.in);
         int input = scanner.nextInt();
+
         switch (input) {
             case 1 -> displayShares();
             case 2 -> displayCrypto();
             case 3 -> displayYourCrypto();
+            case 0 -> currentMenu = 1;
             default -> {}
         }
 
@@ -288,7 +335,7 @@ public final class MainMenu {
             case 2 -> currentMenu = 2;
             case 3 -> userCards();
             case 4 -> userTransactions();
-            case 5 -> userAssets();
+            case 5 -> currentMenu = 3;
             case 6 -> userVault();
             case 7 -> currentMenu = 0;
             case 0 -> System.exit(0);
@@ -300,7 +347,8 @@ public final class MainMenu {
         while (true) {
             landingMenu(); // 0
             userMenu(); // 1
-            userAccounts(); // 2
+            accountsMenu(); // 2
+            assetsMenu(); // 3
         }
     }
 
