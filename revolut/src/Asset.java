@@ -1,4 +1,4 @@
-public class Asset {
+public class Asset implements Comparable<Asset> {
     protected String name;
     protected String abbreviation;
     protected Double value;
@@ -42,5 +42,10 @@ public class Asset {
         return "Name = " + name +
                 "\nAbbreviation='" + abbreviation +
                 "\nValue=" + value;
+    }
+
+    @Override
+    public int compareTo(Asset otherAsset) {
+        return this.name.compareTo(otherAsset.name);
     }
 }

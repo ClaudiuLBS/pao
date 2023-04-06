@@ -282,9 +282,14 @@ public final class MainMenu {
         pressEnterToContinue();
     }
     public void displayYourCrypto() {
-//         afisam cat avem din fiecare cryto
-//        apoi intr0un form zicem cat vrem sa stacam, pt indicele uni crypto
-
+        var ownedCrypto = currentUser.showCrypto(true, true);
+        System.out.print("> ");
+        Scanner scanner = new Scanner(System.in);
+        var cryptoIdx = scanner.nextInt() - 1;
+        System.out.print("Amount: ");
+        Double amount = scanner.nextDouble();
+        currentUser.stackCrypto(ownedCrypto.get(cryptoIdx), amount);
+        pressEnterToContinue();
     }
     public void assetsMenu() {
         if (currentMenu != 3) return;

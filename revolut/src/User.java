@@ -259,7 +259,7 @@ public class User {
         }
     }
 
-    public void showUserAssets() {
+    public void showShares() {
         System.out.println("Shares:");
         for (Asset a : assetsOwned.keySet()) {
             if (a instanceof CryptoCurrency) continue;
@@ -269,15 +269,39 @@ public class User {
             System.out.println("Value : " + assetsOwned.get(a) * a.getValue());
             System.out.println("***************************************************************************************************");
         }
+    }
+    Vector<CryptoCurrency> showCrypto(boolean withIndices, boolean withStakedAmount) {
         System.out.println("Crypto:");
+        Vector<CryptoCurrency> ownedCrypto = new Vector<>();
+        int i = 0;
         for (Asset a : assetsOwned.keySet()) {
             if (a instanceof Share) continue;
+            i += 1;
             System.out.println("***************************************************************************************************");
+            if (withIndices) System.out.println(i + ". ");
             System.out.println(a.getAbbreviation());
             System.out.println("Balance : " + assetsOwned.get(a));
             System.out.println("Value : " + assetsOwned.get(a) * a.getValue());
+            if (withStakedAmount) System.out.println("Staked amount: " + stakedAmount.getOrDefault(a, 0.0));
             System.out.println("***************************************************************************************************");
+            ownedCrypto.add((CryptoCurrency) a);
         }
+        return ownedCrypto;
+    }
+
+    public void stackCrypto(CryptoCurrency crypto, Double amount) {
+        if (assetsOwned.get(crypto) < amount) {
+            System.out.println("Not enough " + crypto.name);
+            return;
+        }
+        assetsOwned.put(crypto, assetsOwned.getOrDefault(crypto, 0.0) - amount);
+        stakedAmount.put(crypto, stakedAmount.getOrDefault(crypto, 0.0) + amount);
+        System.out.println("Successfully staked " + amount + " " + crypto.abbreviation);
+    }
+    
+    public void showUserAssets() {
+        showShares();
+        showCrypto(false, true);
     }
 
     public void saveToVault(){
