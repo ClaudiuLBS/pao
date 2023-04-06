@@ -22,11 +22,15 @@ public class Vault {
 
     @Override
     public String toString() {
-        return "Balance :" + savings +
-                "Savings/day=" + savingPerDay;
+        return "Balance: " + savings +
+                " | Savings/day: " + savingPerDay;
     }
     public Double getSavingPerDay() {
         return savingPerDay;
+    }
+
+    public void setSavingPerDay(Double savingPerDay) {
+        this.savingPerDay = savingPerDay;
     }
 
     public void addToSavings(Double sum){

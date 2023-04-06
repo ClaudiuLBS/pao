@@ -53,7 +53,6 @@ public class User {
         this.vault = new Vault();
         this.timer = new Timer();
         startTimer();
-
     }
 
 
@@ -142,6 +141,11 @@ public class User {
             value += a.value * assetsOwned.get(a);
         return value;
     }
+
+    public void terminateAccount(Account acc) {
+        accounts.remove(acc);
+    }
+
     public void makeTransaction(String IBAN, Double amount, Vector<User> users) throws IOException {
         Double tax = amount * 0.05;
         Account senderAccount = null;
@@ -161,7 +165,7 @@ public class User {
         for (User user : users) {
             for (Account account : user.accounts) {
                 if (Objects.equals(account.getIBAN(), IBAN)) {
-                    user.accounts.get(0).deposit(amount);
+                    account.deposit(amount);
                     user.transactions.add(transaction);
                     break;
                 }
@@ -170,14 +174,15 @@ public class User {
 
     }
 
-    public void buyAsset(Asset asset, Double amount) throws IOException{
+    public void buyAsset(Asset asset, Double amount) {
         for (Account account : this.accounts) {
             if (account.getBalance() >= asset.getValue() * amount) {
                 account.withdraw(asset.getValue() * amount);
                 this.assetsOwned.put(asset, this.assetsOwned.getOrDefault(asset, 0.0) + amount);
+                return;
             }
         }
-        throw new IOException("I'm sorry, but it seems that your current financial situation does not allow for the purchase of this item at this time. Perhaps it would be best to consider more affordable options or save up for the future.");
+        throw new RuntimeException("I'm sorry, but it seems that your current financial situation does not allow for the purchase of this item at this time. Perhaps it would be best to consider more affordable options or save up for the future.");
     }
 
     public void sellAsset(Asset asset, Double amount) throws IOException{
@@ -223,10 +228,11 @@ public class User {
     public void showUserAccounts(){
         System.out.println("ACCOUNTS: ");
         for(Account acc : accounts){
-            if (acc != accounts.get(0))
-                System.out.println("\n***************************************************************************************************");
-            System.out.println(acc);
+            System.out.println(accounts.indexOf(acc) + 1 + ".");
+            System.out.println(acc + "\n");
         }
+        System.out.println(accounts.size() + 1 + ". Create new Account");
+        System.out.println("0. Back");
     }
     public void showUserCards(){
         System.out.println("CARDS: ");
@@ -247,7 +253,19 @@ public class User {
     }
 
     public void showUserAssets() {
+        System.out.println("Shares:");
         for (Asset a : assetsOwned.keySet()) {
+            if (a instanceof CryptoCurrency) continue;
+            System.out.println("***************************************************************************************************");
+            System.out.println(a.getAbbreviation());
+            System.out.println("Balance : " + assetsOwned.get(a));
+            System.out.println("Value : " + assetsOwned.get(a) * a.getValue());
+            System.out.println("***************************************************************************************************");
+        }
+        System.out.println("Crypto:");
+        for (Asset a : assetsOwned.keySet()) {
+            if (a instanceof Share) continue;
+            System.out.println("***************************************************************************************************");
             System.out.println(a.getAbbreviation());
             System.out.println("Balance : " + assetsOwned.get(a));
             System.out.println("Value : " + assetsOwned.get(a) * a.getValue());
@@ -279,7 +297,8 @@ public class User {
     }
 
     private void startTimer(){
-        timer.scheduleAtFixedRate(new SaveToVault(), 0, 24 * 60 * 60 * 1000); //24 de ore
+//        timer.scheduleAtFixedRate(new SaveToVault(), 0, 24 * 60 * 60 * 1000); //24 de ore
+        timer.scheduleAtFixedRate(new SaveToVault(), 0, 5 * 1000); //24 de ore
     }
 
     private class SaveToVault extends TimerTask{
@@ -295,6 +314,7 @@ public class User {
         else{
             vault.setSavings(vault.getSavings() - amount);
             accounts.get(0).deposit(amount);
+            System.out.println("Successfully withdrawn " + amount + " from vault.");
         }
     }
 

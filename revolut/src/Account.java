@@ -40,6 +40,8 @@ public class Account {
     public void withdraw(Double amount) {
         if (this.balance >= amount) {
             this.balance -= amount;
+        } else {
+            throw new RuntimeException("I'm sorry, but there are currently insufficient funds in your account to complete the requested withdrawal");
         }
     }
 
@@ -49,6 +51,6 @@ public class Account {
 
     @Override
     public String toString() {
-        return "\nIBAN : " + IBAN + "\nCurrency : " + currency + "\nBalance: "  + getBalance();
+        return "IBAN: " + IBAN + "\nCurrency: " + currency + "\nBalance: "  + getBalance();
     }
 }
