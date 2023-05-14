@@ -1,6 +1,7 @@
 import java.util.Currency;
 
 public class Account {
+    private Integer id;
     private String IBAN;
     private Double balance = 0.0;
     private Currency currency;
@@ -12,7 +13,9 @@ public class Account {
         this.IBAN = IBAN;
         this.currency =  currency;
     }
-
+    public Integer getId() {
+        return id;
+    }
     public String getIBAN() {
         return IBAN;
     }

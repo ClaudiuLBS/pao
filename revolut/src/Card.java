@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 
 public class Card {
+    private Integer id;
     private String tag;
     private String number;
     private Double limit;
@@ -15,7 +16,9 @@ public class Card {
         this.CVV = CVV;
         this.expirationDate = expirationDate;
     }
-
+    public Integer getId() {
+        return id;
+    }
     public String getTag() {
         return tag;
     }

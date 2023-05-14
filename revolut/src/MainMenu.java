@@ -102,7 +102,7 @@ public final class MainMenu {
                 return;
             }
 
-        System.out.println("Info not good try again");
+        System.out.println("Account not found. Try again.");
     }
 
     public void landingMenu() {
@@ -247,7 +247,7 @@ public final class MainMenu {
 
     public void displayShares() {
         for (int i = 0; i < availableCompanies.length; i++) {
-            System.out.println(i + 1 + ". " + availableCompanies[i].name + " | " + availableCompanies[i].value + "$ ");
+            System.out.println(i + 1 + ". " + availableCompanies[i].getName() + " | " + availableCompanies[i].getValue() + "$ ");
         }
         System.out.print("> ");
         Scanner scanner = new Scanner(System.in);
@@ -257,7 +257,7 @@ public final class MainMenu {
 
         try {
             currentUser.buyAsset(availableCompanies[companyIdx], amount);
-            System.out.println("Successfully bought " + amount + " " + availableCompanies[companyIdx].abbreviation + " shares.");
+            System.out.println("Successfully bought " + amount + " " + availableCompanies[companyIdx].getAbbreviation() + " shares.");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -265,7 +265,7 @@ public final class MainMenu {
     }
     public void displayCrypto() {
         for (int i = 0; i < availableCrypto.length; i++) {
-            System.out.println(i + 1 + ". " + availableCrypto[i].name + " | " + availableCrypto[i].value + "$ ");
+            System.out.println(i + 1 + ". " + availableCrypto[i].getName() + " | " + availableCrypto[i].getValue() + "$ ");
         }
         System.out.print("> ");
         Scanner scanner = new Scanner(System.in);
@@ -275,7 +275,7 @@ public final class MainMenu {
 
         try {
             currentUser.buyAsset(availableCrypto[companyIdx], amount);
-            System.out.println("Successfully bought " + amount + " " + availableCrypto[companyIdx].abbreviation + " crypto.");
+            System.out.println("Successfully bought " + amount + " " + availableCrypto[companyIdx].getAbbreviation() + " crypto.");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -400,7 +400,4 @@ public final class MainMenu {
             vaultMenu(); // 4
         }
     }
-
-
-
 }

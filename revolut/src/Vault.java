@@ -1,4 +1,5 @@
 public class Vault {
+    private Integer id;
     private Double savings;
 
     private Double savingPerDay;
@@ -13,6 +14,9 @@ public class Vault {
         this.savingPerDay = savingPerDay;
     }
 
+    public Integer getId() {
+        return id;
+    }
     public Double getSavings() {
         return savings;
     }

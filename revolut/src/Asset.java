@@ -1,7 +1,8 @@
 public class Asset implements Comparable<Asset> {
-    protected String name;
-    protected String abbreviation;
-    protected Double value;
+    private Integer id;
+    private String name;
+    private String abbreviation;
+    private Double value;
 
     public Asset() {
 
@@ -12,7 +13,9 @@ public class Asset implements Comparable<Asset> {
         this.abbreviation = abbreviation;
         this.value = value;
     }
-
+    public Integer getId() {
+        return id;
+    }
     public String getName() {
         return name;
     }

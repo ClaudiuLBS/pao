@@ -12,7 +12,6 @@ public class CryptoCurrency extends Asset {
         super(name, abb, value);
         this.stakingReturn = stakingReturn;
     }
-
     public Double getStakingReturn() {
         return stakingReturn;
     }

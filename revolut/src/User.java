@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 
 public class User {
+    private Integer id;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -15,8 +16,8 @@ public class User {
     private Vector<Account> accounts;
     private Vector<Card> cards;
     private Vector<Transaction> transactions;
-    private Vault vault;
     private String password;
+    private Vault vault;
     private Timer vaultTimer;
     private Timer cryptoTimer;
 
@@ -57,7 +58,9 @@ public class User {
         startTimer();
     }
 
-
+    public Integer getId() {
+        return id;
+    }
     public String getFirstName() {
         return firstName;
     }
@@ -148,7 +151,7 @@ public class User {
     public Double getAssetsValue() {
         Double value = 0.0;
         for (Asset a : assetsOwned.keySet())
-            value += a.value * assetsOwned.get(a);
+            value += a.getValue() * assetsOwned.get(a);
         return value;
     }
 
@@ -294,12 +297,12 @@ public class User {
 
     public void stackCrypto(CryptoCurrency crypto, Double amount) {
         if (assetsOwned.get(crypto) < amount) {
-            System.out.println("Not enough " + crypto.name);
+            System.out.println("Not enough " + crypto.getName());
             return;
         }
         assetsOwned.put(crypto, assetsOwned.getOrDefault(crypto, 0.0) - amount);
         stakedAmount.put(crypto, stakedAmount.getOrDefault(crypto, 0.0) + amount);
-        System.out.println("Successfully staked " + amount + " " + crypto.abbreviation);
+        System.out.println("Successfully staked " + amount + " " + crypto.getAbbreviation());
     }
     public void withdrawCrypto(CryptoCurrency crypto, Double amount) {
         if (stakedAmount.getOrDefault(crypto, 0.0) < amount) {
@@ -308,7 +311,7 @@ public class User {
         }
         stakedAmount.put(crypto, stakedAmount.getOrDefault(crypto, 0.0) - amount);
         assetsOwned.put(crypto, assetsOwned.getOrDefault(crypto, 0.0) + amount);
-        System.out.println("Successfully withdrawn " + amount + " " + crypto.abbreviation);
+        System.out.println("Successfully withdrawn " + amount + " " + crypto.getAbbreviation());
     }
     public void showUserAssets() {
         showShares();

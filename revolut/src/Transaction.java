@@ -1,15 +1,14 @@
 import java.time.LocalDate;
 
 public class Transaction {
-    //cand facem o tranzactie se aduaga la ambii useri
+    private Integer id;
     private String senderIBAN;
     private String receiverIBAN;
     private Double amount;
     private Double tax;
     private LocalDate date;
 
-    public Transaction() {
-    }
+    public Transaction() {}
 
     public Transaction(String senderIBAN, String receiverIBAN, Double amount, Double tax, LocalDate date) {
         this.senderIBAN = senderIBAN;
@@ -18,7 +17,9 @@ public class Transaction {
         this.tax = tax;
         this.date = date;
     }
-
+    public Integer getId() {
+        return id;
+    }
     public String getSenderIBAN() {
         return senderIBAN;
     }
