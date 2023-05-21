@@ -8,18 +8,18 @@ public final class MainMenu {
     private static Integer currentMenu = 0;
     DbContext dbContext = DbContext.getInstance();
     private static final Share[] availableCompanies = {
-        new Share("Apple Inc.", "AAPL", 568.20, 0.0064),
-        new Share("Amazon.com Inc.", "AMZN", 3749.80, 0.0),
-        new Share("Microsoft Corporation", "MSFT", 397.30, 0.008),
-        new Share("Facebook, Inc.", "FB", 303.2, 0.0),
-        new Share("Alphabet Inc.", "GOOGL", 2237.50, 0.0)
+        new Share(1, "Apple Inc.", "AAPL", 568.20, 0.0064),
+        new Share(2, "Amazon.com Inc.", "AMZN", 3749.80, 0.0),
+        new Share(3, "Microsoft Corporation", "MSFT", 397.30, 0.008),
+        new Share(4, "Facebook, Inc.", "FB", 303.2, 0.0),
+        new Share(5, "Alphabet Inc.", "GOOGL", 2237.50, 0.0)
     };
     private static final CryptoCurrency[] availableCrypto = {
-        new CryptoCurrency("Ethereum", "ETH", 3683.43, 0.066),
-        new CryptoCurrency("Cardano", "ADA", 3.01, 0.053),
-        new CryptoCurrency("Polkadot", "DOT", 59.52, 0.135),
-        new CryptoCurrency("Solana", "SOL", 264.10, 0.085),
-        new CryptoCurrency("Binance Coin", "BNB", 812.15, 0.091),
+        new CryptoCurrency(1, "Ethereum", "ETH", 3683.43, 0.066),
+        new CryptoCurrency(2, "Cardano", "ADA", 3.01, 0.053),
+        new CryptoCurrency(3, "Polkadot", "DOT", 59.52, 0.135),
+        new CryptoCurrency(4, "Solana", "SOL", 264.10, 0.085),
+        new CryptoCurrency(5, "Binance Coin", "BNB", 812.15, 0.091),
     };
     private boolean search(String where, String what) {
         switch (where) {
@@ -51,46 +51,10 @@ public final class MainMenu {
                     dbUsers.getString("email"),
                     dbUsers.getString("phone_number"),
                     dbUsers.getString("password"),
-                    dbUsers.getInt("vault_id")
+                    dbUsers.getInt("vault_id"),
+                    availableCompanies,
+                    availableCrypto
                 );
-
-//              Add Accounts
-                ResultSet dbAccounts = dbContext.executeQuery("SELECT * FROM account WHERE user_id = %d".formatted(user.getId()));
-                while (dbAccounts.next()) {
-                    Account account = new Account(
-                        dbAccounts.getInt("id"),
-                        dbAccounts.getString("iban"),
-                        dbAccounts.getDouble("balance"),
-                        dbAccounts.getString("currency")
-                    );
-                    ResultSet dbTransactions = dbContext.executeQuery("SELECT * FROM transaction WHERE sender_iban = '%s' or receiver_iban = '%s'".formatted(account.getIBAN(), account.getIBAN()));
-                    while (dbTransactions.next()) {
-                        Transaction tx = new Transaction(
-                            dbTransactions.getInt("id"),
-                            dbTransactions.getString("sender_iban"),
-                            dbTransactions.getString("receiver_iban"),
-                            dbTransactions.getDouble("amount"),
-                            dbTransactions.getDouble("tax"),
-                            dbTransactions.getString("transaction_date")
-                        );
-                        user.getTransactions().add(tx);
-                    }
-                    user.getAccounts().add(account);
-                }
-
-//              Add Cards
-                ResultSet dbCards = dbContext.executeQuery("SELECT * FROM card WHERE user_id = %d".formatted(user.getId()));
-                while (dbCards.next()) {
-                    Card card = new Card(
-                        dbCards.getInt("id"),
-                            dbCards.getString("tag"),
-                            dbCards.getString("number"),
-                            dbCards.getDouble("card_limit"),
-                            dbCards.getInt("cvv"),
-                            dbCards.getString("expiration_date")
-                    );
-                    user.getCards().add(card);
-                }
 
                 users.add(user);
             } catch (SQLException e) {

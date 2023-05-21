@@ -8,7 +8,8 @@ public class Asset implements Comparable<Asset> {
 
     }
 
-    public Asset(String name, String abbreviation, Double value) {
+    public Asset(Integer id, String name, String abbreviation, Double value) {
+        this.id = id;
         this.name = name;
         this.abbreviation = abbreviation;
         this.value = value;

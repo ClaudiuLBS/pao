@@ -54,22 +54,20 @@ public class DbContext {
                 throw new SQLException("Failed to insert item.");
             }
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
+                if (generatedKeys.next())
                     return generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("Failed to retrieve inserted item ID.");
-                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
         }
+        return -1;
     }
-    void executeUpdate(String sql) {
+    Integer executeUpdate(String sql) {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.executeUpdate();
+            return statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1;
     }
 }

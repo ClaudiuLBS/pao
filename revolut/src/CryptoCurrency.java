@@ -8,8 +8,8 @@ public class CryptoCurrency extends Asset {
 
     }
 
-    public CryptoCurrency(String name, String abb, Double value, Double stakingReturn) {
-        super(name, abb, value);
+    public CryptoCurrency(Integer id, String name, String abbreviation, Double value, Double stakingReturn) {
+        super(id, name, abbreviation, value);
         this.stakingReturn = stakingReturn;
     }
     public Double getStakingReturn() {

@@ -22,7 +22,7 @@ public class User {
     private Vault vault;
     private Timer vaultTimer;
     private Timer cryptoTimer;
-    private DbContext dbContext = DbContext.getInstance();
+    private final DbContext dbContext = DbContext.getInstance();
     public User() {
         this.accounts = new Vector<>();
         this.cards = new Vector<>();
@@ -42,6 +42,7 @@ public class User {
 //      CREATE VAULT
         String sql = "INSERT INTO vault (total_savings, savings_per_day) VALUES (%.5f, %.5f)".formatted(vault.getSavings(), vault.getSavingPerDay());
         Integer vaultId = dbContext.executeInsert(sql);
+        vault.setId(vaultId);
 //      CREATE USER
         sql = "INSERT INTO user (first_name, last_name, phone_number, email, password, vault_id) VALUES ('%s', '%s', '%s', '%s', '%s', %d)"
                 .formatted(firstName, lastName, phoneNumber, email, password, vaultId);
@@ -61,8 +62,10 @@ public class User {
             String email,
             String phoneNumber,
             String password,
-            Integer vaultId
-    ) {
+            Integer vaultId,
+            Share[] allShares,
+            CryptoCurrency[] allCryptoCurrencies
+    ) throws SQLException {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -70,26 +73,80 @@ public class User {
         this.email = email;
         this.password = password;
 
+//      Add Vault
         ResultSet dbVault = dbContext.executeQuery("SELECT * FROM vault WHERE id = %d".formatted(vaultId));
-        try {
-            dbVault.next();
-            this.vault = new Vault(
-                dbVault.getInt("id"),
-                dbVault.getDouble("total_savings"),
-                dbVault.getDouble("savings_per_day")
+        dbVault.next();
+        this.vault = new Vault(
+            dbVault.getInt("id"),
+            dbVault.getDouble("total_savings"),
+            dbVault.getDouble("savings_per_day")
+        );
+
+//      Add Accounts
+        this.accounts = new Vector<>();
+        this.transactions = new Vector<>();
+        ResultSet dbAccounts = dbContext.executeQuery("SELECT * FROM account WHERE user_id = %d".formatted(id));
+        while (dbAccounts.next()) {
+            Account account = new Account(
+                    dbAccounts.getInt("id"),
+                    dbAccounts.getString("iban"),
+                    dbAccounts.getDouble("balance"),
+                    dbAccounts.getString("currency")
             );
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            ResultSet dbTransactions = dbContext.executeQuery("SELECT * FROM transaction WHERE sender_iban = '%s' or receiver_iban = '%s'".formatted(account.getIBAN(), account.getIBAN()));
+            while (dbTransactions.next()) {
+                Transaction tx = new Transaction(
+                        dbTransactions.getInt("id"),
+                        dbTransactions.getString("sender_iban"),
+                        dbTransactions.getString("receiver_iban"),
+                        dbTransactions.getDouble("amount"),
+                        dbTransactions.getDouble("tax"),
+                        dbTransactions.getString("transaction_date")
+                );
+                transactions.add(tx);
+            }
+            accounts.add(account);
         }
 
-        this.accounts = new Vector<>();
+//      Add Cards
         this.cards = new Vector<>();
-        this.transactions = new Vector<>();
+        ResultSet dbCards = dbContext.executeQuery("SELECT * FROM card WHERE user_id = %d".formatted(id));
+        while (dbCards.next()) {
+            Card card = new Card(
+                    dbCards.getInt("id"),
+                    dbCards.getString("tag"),
+                    dbCards.getString("number"),
+                    dbCards.getDouble("card_limit"),
+                    dbCards.getInt("cvv"),
+                    dbCards.getString("expiration_date")
+            );
+            cards.add(card);
+        }
+
+//      Add Shares
         this.assetsOwned = new HashMap<>();
+        ResultSet dbShares = dbContext.executeQuery("SELECT * FROM shares_owned WHERE user_id = %d".formatted(id));
+        while (dbShares.next())
+            for (Share sh : allShares)
+                if (sh.getId() == dbShares.getInt("share_id")) {
+                    assetsOwned.put(sh, dbShares.getDouble("amount"));
+                    break;
+                }
+
+//      Add Crypto
         this.stakedAmount = new TreeMap<>();
+        ResultSet dbCrypto = dbContext.executeQuery("SELECT * FROM crypto_owned WHERE user_id = %d".formatted(id));
+        while (dbCrypto.next())
+            for (CryptoCurrency cc : allCryptoCurrencies)
+                if (cc.getId() == dbCrypto.getInt("crypto_id")) {
+                    assetsOwned.put(cc, dbCrypto.getDouble("amount"));
+                    stakedAmount.put(cc, dbCrypto.getDouble("staked_amount"));
+                    break;
+                }
+
+//      Start Timer
         this.cryptoTimer = new Timer();
         this.vaultTimer = new Timer();
-
         startTimer();
     }
 
@@ -155,6 +212,10 @@ public class User {
         this.transactions = transactions;
     }
 
+    public Vault getVault(){
+        return vault;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -187,19 +248,18 @@ public class User {
     }
 
     public Double getAssetsValue() {
-        Double value = 0.0;
+        double value = 0.0;
         for (Asset a : assetsOwned.keySet())
             value += a.getValue() * assetsOwned.get(a);
         return value;
     }
 
     public void terminateAccount(Account acc) {
-//      @TODO REMOVE FROM DATABASE
         accounts.remove(acc);
+        dbContext.executeUpdate("DELETE FROM account WHERE id = %d".formatted(acc.getId()));
     }
 
     public void makeTransaction(String IBAN, Double amount, Vector<User> users) {
-//      @TODO ADD TRANSACTION TO DATABASE
         Double tax = amount * 0.05;
         Account senderAccount = null;
         for (Account account : this.accounts) {
@@ -229,12 +289,23 @@ public class User {
     }
 
     public void buyAsset(Asset asset, Double amount) {
-//      @TODO ASSET TO DATABASE in shares_owned OR crypto_owned
 
         for (Account account : this.accounts) {
             if (account.getBalance() >= asset.getValue() * amount) {
                 account.withdraw(asset.getValue() * amount);
-                this.assetsOwned.put(asset, this.assetsOwned.getOrDefault(asset, 0.0) + amount);
+                Double assetAmount = this.assetsOwned.getOrDefault(asset, 0.0) + amount;
+                this.assetsOwned.put(asset, assetAmount);
+
+                String sql = "UPDATE shares_owned SET amount = %.5f WHERE user_id = %d AND share_id = %d".formatted(assetAmount, id, asset.getId());
+                if (asset instanceof CryptoCurrency) {
+                    sql = "UPDATE crypto_owned SET amount = %.5f WHERE user_id = %d AND crypto_id = %d".formatted(assetAmount, id, asset.getId());
+                }
+                if (dbContext.executeUpdate(sql) > 0) return;
+                sql = "INSERT INTO shares_owned (user_id, share_id, amount) VALUES (%d, %d, %.5f)".formatted(id, asset.getId(), assetAmount);
+                if (asset instanceof CryptoCurrency) {
+                    sql = "INSERT INTO crypto_owned (user_id, crypto_id, amount, staked_amount) VALUES (%d, %d, %.5f, 0)".formatted(id, asset.getId(), assetAmount);
+                }
+                dbContext.executeInsert(sql);
                 return;
             }
         }
@@ -353,26 +424,28 @@ public class User {
     }
 
     public void stackCrypto(CryptoCurrency crypto, Double amount) {
-//      @TODO UPDATE staked_amount FROM crypto_owned
-
         if (assetsOwned.get(crypto) < amount) {
             System.out.println("Not enough " + crypto.getName());
             return;
         }
         assetsOwned.put(crypto, assetsOwned.getOrDefault(crypto, 0.0) - amount);
         stakedAmount.put(crypto, stakedAmount.getOrDefault(crypto, 0.0) + amount);
+        String sql = "UPDATE crypto_owned SET amount = %.2f, staked_amount = %.5f WHERE user_id = %d AND crypto_id = %d"
+                        .formatted(assetsOwned.get(crypto), stakedAmount.get(crypto), id, crypto.getId());
+        dbContext.executeUpdate(sql);
         System.out.println("Successfully staked " + amount + " " + crypto.getAbbreviation());
     }
 
     public void withdrawCrypto(CryptoCurrency crypto, Double amount) {
-//      @TODO UPDATE staked_amount FROM crypto_owned
-
         if (stakedAmount.getOrDefault(crypto, 0.0) < amount) {
             System.out.println("Not enough crypto to withdraw.");
             return;
         }
         stakedAmount.put(crypto, stakedAmount.getOrDefault(crypto, 0.0) - amount);
         assetsOwned.put(crypto, assetsOwned.getOrDefault(crypto, 0.0) + amount);
+        String sql = "UPDATE crypto_owned SET amount = %.5f, staked_amount = %.5f WHERE user_id = %d AND crypto_id = %d"
+                .formatted(assetsOwned.get(crypto), stakedAmount.get(crypto), id, crypto.getId());
+        dbContext.executeUpdate(sql);
         System.out.println("Successfully withdrawn " + amount + " " + crypto.getAbbreviation());
     }
     public void showUserAssets() {
@@ -381,8 +454,6 @@ public class User {
     }
 
     public void saveToVault(){
-//      @TODO UPDATE VAULT AND ACCOUNT BALANCE
-
         Double svpd = vault.getSavingPerDay();
         if(getBalance() > svpd){
             for (Account a : accounts){
@@ -409,6 +480,9 @@ public class User {
         for(Map.Entry<CryptoCurrency, Double> crypto : stakedAmount.entrySet()) {
             double stakeRate = crypto.getKey().getStakingReturn();
             stakedAmount.put(crypto.getKey(), crypto.getValue() + crypto.getValue() * stakeRate);
+            String sql = "UPDATE crypto_owned SET staked_amount = %.5f WHERE user_id = %d AND crypto_id = %d"
+                    .formatted( stakedAmount.get(crypto.getKey()), id, crypto.getKey().getId());
+            dbContext.executeUpdate(sql);
         }
     }
 
@@ -435,7 +509,6 @@ public class User {
     }
 
     public void withdrawFromVault(Double amount) {
-//      @TODO UPDATE VAULT AND ACCOUNT BALANCE
         if (amount > vault.getSavings()){
             System.out.println("I regret to inform you that currently, there are not enough funds available in the vault.");
         }
@@ -444,10 +517,6 @@ public class User {
             accounts.get(0).deposit(amount);
             System.out.println("Successfully withdrawn " + amount + " from vault.");
         }
-    }
-
-    public Vault getVault(){
-        return vault;
     }
 
     @Override

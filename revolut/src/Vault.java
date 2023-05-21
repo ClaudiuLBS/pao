@@ -3,6 +3,7 @@ public class Vault {
     private Double savings;
 
     private Double savingPerDay;
+    private final DbContext dbContext = DbContext.getInstance();
 
     public Vault() {
         this.savings = 0.0;
@@ -18,11 +19,31 @@ public class Vault {
     public Integer getId() {
         return id;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
     public Double getSavings() {
         return savings;
     }
-    public void setSavings(double savings) {
+    public void setSavings(Double savings) {
         this.savings = savings;
+        dbContext.executeUpdate("UPDATE vault SET total_savings = %.5f WHERE id = %d".formatted(savings, id));
+    }
+
+    public Double getSavingPerDay() {
+        return savingPerDay;
+    }
+
+    public void setSavingPerDay(Double savingPerDay) {
+        this.savingPerDay = savingPerDay;
+        dbContext.executeUpdate("UPDATE vault SET savings_per_day = %.5f WHERE id = %d".formatted(savingPerDay, id));
+    }
+
+
+    public void addToSavings(Double sum){
+        this.savings += sum;
+        dbContext.executeUpdate("UPDATE vault SET total_savings = %.5f WHERE id = %d".formatted(savings, id));
     }
 
     @Override
@@ -30,17 +51,4 @@ public class Vault {
         return "Balance: " + savings +
                 " | Savings/day: " + savingPerDay;
     }
-    public Double getSavingPerDay() {
-        return savingPerDay;
-    }
-
-    public void setSavingPerDay(Double savingPerDay) {
-        this.savingPerDay = savingPerDay;
-    }
-
-    public void addToSavings(Double sum){
-        this.savings += sum;
-    }
-
-
 }
