@@ -85,6 +85,7 @@ public final class MainMenu {
 
         users.add(user);
         currentUser = user;
+        user.updateDbInfo();
         currentMenu = 1;
     }
 

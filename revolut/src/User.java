@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.Timer;
@@ -33,8 +34,27 @@ public class User {
         this.cryptoTimer = new Timer();
         this.vaultTimer = new Timer();
         startTimer();
+        insertToDB();
     }
 
+    public void insertToDB() {
+        DbContext dbContext = new DbContext();
+        String sql = "INSERT INTO vault (total_savings, savings_per_day) VALUES (%.5f, %.5f)".formatted(vault.getSavings(), vault.getSavingPerDay());
+        Integer vaultId = dbContext.executeInsert(sql);
+
+        sql = "INSERT INTO user (first_name, last_name, phone_number, email, password, vault_id) VALUES ('%s', '%s', '%s', '%s', '%s', %d)".formatted(firstName, lastName, phoneNumber, email, password, vaultId);
+        id = dbContext.executeInsert(sql);
+        dbContext.closeConnection();
+    }
+
+    public void updateDbInfo() {
+        DbContext dbContext = new DbContext();
+        dbContext.executeUpdate(
+                "UPDATE user SET first_name = '%s', last_name = '%s', phone_number = '%s', email = '%s', password = '%s' WHERE id = %d"
+                .formatted(firstName, lastName, phoneNumber, email, password, id)
+            );
+        dbContext.closeConnection();
+    }
     public User(
             String firstName,
             String lastName,
@@ -56,8 +76,12 @@ public class User {
         this.cryptoTimer = new Timer();
         this.vaultTimer = new Timer();
         startTimer();
+        insertToDB();
     }
 
+    public User(Integer id) {
+//        dbContext.executeQuery("")
+    }
     public Integer getId() {
         return id;
     }
@@ -388,6 +412,7 @@ public class User {
     @Override
     public String toString() {
         return
+            "Id: " + id + '\n' +
             "Name: " + firstName + " " + lastName + '\n' +
             "Phone Number: " + phoneNumber + '\n' +
             "Email: " + email + '\n' +
