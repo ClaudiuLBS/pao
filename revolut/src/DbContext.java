@@ -5,13 +5,21 @@ import java.sql.*;
 import java.util.*;
 
 public class DbContext {
-    String url = System.getenv("DB_URL");
-    String username = System.getenv("DB_USERNAME");
-    String password = System.getenv("DB_PASSWORD");
-    Connection connection;
-    public DbContext() {
+    static String url = System.getenv("DB_URL");
+    static String username = System.getenv("DB_USERNAME");
+    static String password = System.getenv("DB_PASSWORD");
+    static Connection connection;
+    private static DbContext instance;
+    private DbContext() {
         startConnection();
     }
+    public static DbContext getInstance(){
+        if(instance == null){
+            instance = new DbContext();
+        }
+        return instance;
+    }
+
 
     public void startConnection() {
         try {

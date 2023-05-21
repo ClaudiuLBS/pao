@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Card {
     private Integer id;
@@ -16,9 +17,25 @@ public class Card {
         this.CVV = CVV;
         this.expirationDate = expirationDate;
     }
+
+    public Card(Integer id, String tag, String number, Double limit, Integer CVV, String expirationDate) {
+        this.id = id;
+        this.tag = tag;
+        this.number = number;
+        this.limit = limit;
+        this.CVV = CVV;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.expirationDate = LocalDate.parse(expirationDate, formatter);
+    }
+
     public Integer getId() {
         return id;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getTag() {
         return tag;
     }

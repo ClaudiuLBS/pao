@@ -1,10 +1,12 @@
-import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public final class MainMenu {
     private static MainMenu instance;
     private static Vector<User> users;
     private static Integer currentMenu = 0;
+    DbContext dbContext = DbContext.getInstance();
     private static final Share[] availableCompanies = {
         new Share("Apple Inc.", "AAPL", 568.20, 0.0064),
         new Share("Amazon.com Inc.", "AMZN", 3749.80, 0.0),
@@ -37,6 +39,53 @@ public final class MainMenu {
     private User currentUser;
     private MainMenu() {
         users = new Vector<>();
+        ResultSet dbUsers = dbContext.executeQuery("SELECT * FROM user");
+        while (true) {
+            try {
+                if (!dbUsers.next()) break;
+//              Add User
+                User user = new User(
+                    dbUsers.getInt("id"),
+                    dbUsers.getString("first_name"),
+                    dbUsers.getString("last_name"),
+                    dbUsers.getString("email"),
+                    dbUsers.getString("phone_number"),
+                    dbUsers.getString("password"),
+                    dbUsers.getInt("vault_id")
+                );
+
+//              Add Accounts
+                ResultSet dbAccounts = dbContext.executeQuery("SELECT * FROM account WHERE user_id = %d".formatted(user.getId()));
+                while (dbAccounts.next()) {
+                    Account account = new Account(
+                        dbAccounts.getInt("id"),
+                        dbAccounts.getString("iban"),
+                        dbAccounts.getDouble("balance"),
+                        dbAccounts.getString("currency")
+                    );
+                    user.getAccounts().add(account);
+                }
+
+//              Add Cards
+                ResultSet dbCards = dbContext.executeQuery("SELECT * FROM card WHERE user_id = %d".formatted(user.getId()));
+                while (dbCards.next()) {
+                    Card card = new Card(
+                        dbCards.getInt("id"),
+                            dbCards.getString("tag"),
+                            dbCards.getString("number"),
+                            dbCards.getDouble("card_limit"),
+                            dbCards.getInt("cvv"),
+                            dbCards.getString("expiration_date")
+                    );
+                    user.getCards().add(card);
+                }
+
+                users.add(user);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
     public void pressEnterToContinue() {
@@ -224,7 +273,7 @@ public final class MainMenu {
         pressEnterToContinue();
     }
 
-    public void userTransactions() throws IOException {
+    public void userTransactions() {
         currentUser.showUserTransactions();
         System.out.println("New Transaction? (Y/N)");
         Scanner scanner = new Scanner(System.in);
@@ -240,7 +289,7 @@ public final class MainMenu {
         try {
             currentUser.makeTransaction(to, amount, users);
             System.out.println("Successfully sent " + amount + " to " + to + ".");
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         pressEnterToContinue();
@@ -362,7 +411,7 @@ public final class MainMenu {
         pressEnterToContinue();
     }
 
-    public void userMenu() throws IOException {
+    public void userMenu() {
         if (currentMenu != 1) return;
         System.out.println("\nLogged in as " + currentUser.getFirstName());
         final String[] menuOptions = {"User Information", "Accounts", "Cards", "Transactions", "Assets", "Vault", "Sign Out"};
@@ -392,7 +441,7 @@ public final class MainMenu {
             }
         }
     }
-    public void Menu() throws IOException{
+    public void Menu(){
         while (true) {
             landingMenu(); // 0
             userMenu(); // 1

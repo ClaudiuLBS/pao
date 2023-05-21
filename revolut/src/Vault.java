@@ -9,7 +9,8 @@ public class Vault {
         this.savingPerDay = 0.0;
     }
 
-    public Vault(double savings, double savingPerDay) {
+    public Vault(Integer id, double savings, double savingPerDay) {
+        this.id = id;
         this.savings = savings;
         this.savingPerDay = savingPerDay;
     }

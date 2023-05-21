@@ -13,9 +13,22 @@ public class Account {
         this.IBAN = IBAN;
         this.currency =  currency;
     }
+
+    public Account(Integer id, String IBAN, Double balance, String currency) {
+        this.id = id;
+        this.IBAN = IBAN;
+        this.balance = balance;
+        this.currency = Currency.getInstance(currency);
+    }
+
     public Integer getId() {
         return id;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getIBAN() {
         return IBAN;
     }
