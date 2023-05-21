@@ -63,6 +63,18 @@ public final class MainMenu {
                         dbAccounts.getDouble("balance"),
                         dbAccounts.getString("currency")
                     );
+                    ResultSet dbTransactions = dbContext.executeQuery("SELECT * FROM transaction WHERE sender_iban = '%s' or receiver_iban = '%s'".formatted(account.getIBAN(), account.getIBAN()));
+                    while (dbTransactions.next()) {
+                        Transaction tx = new Transaction(
+                            dbTransactions.getInt("id"),
+                            dbTransactions.getString("sender_iban"),
+                            dbTransactions.getString("receiver_iban"),
+                            dbTransactions.getDouble("amount"),
+                            dbTransactions.getDouble("tax"),
+                            dbTransactions.getString("transaction_date")
+                        );
+                        user.getTransactions().add(tx);
+                    }
                     user.getAccounts().add(account);
                 }
 

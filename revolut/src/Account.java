@@ -5,9 +5,8 @@ public class Account {
     private String IBAN;
     private Double balance = 0.0;
     private Currency currency;
-
-    public Account() {
-    }
+    private final DbContext dbContext = DbContext.getInstance();
+    public Account() {}
 
     public Account(String IBAN, Currency currency) {
         this.IBAN = IBAN;
@@ -43,6 +42,7 @@ public class Account {
 
     public void setBalance(Double balance) {
         this.balance = balance;
+        updateDbBalance();
     }
 
     public Currency getCurrency() {
@@ -53,9 +53,14 @@ public class Account {
         this.currency = currency;
     }
 
+    private void updateDbBalance() {
+        dbContext.executeUpdate("UPDATE account SET balance = %.5f WHERE id = %d".formatted(balance, id));
+    }
+
     public void withdraw(Double amount) {
         if (this.balance >= amount) {
             this.balance -= amount;
+            updateDbBalance();
         } else {
             throw new RuntimeException("I'm sorry, but there are currently insufficient funds in your account to complete the requested withdrawal");
         }
@@ -63,6 +68,7 @@ public class Account {
 
     public void deposit(Double amount) {
         this.balance += amount;
+        updateDbBalance();
     }
 
     @Override

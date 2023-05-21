@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Transaction {
     private Integer id;
@@ -16,10 +17,33 @@ public class Transaction {
         this.amount = amount;
         this.tax = tax;
         this.date = date;
+        insertToDb();
+    }
+    public Transaction(Integer id, String senderIBAN, String receiverIBAN, Double amount, Double tax, String date) {
+        this.id = id;
+        this.senderIBAN = senderIBAN;
+        this.receiverIBAN = receiverIBAN;
+        this.amount = amount;
+        this.tax = tax;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.date = LocalDate.parse(date, formatter);
+    }
+    private void insertToDb() {
+        DbContext dbContext = DbContext.getInstance();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String txDate = date.format(formatter);
+        String sql = "INSERT INTO transaction (sender_iban, receiver_iban, amount, tax, transaction_date) VALUES ('%s', '%s', %.5f, %.5f, '%s')"
+                .formatted(senderIBAN, receiverIBAN, amount, tax, txDate);
+        id = dbContext.executeInsert(sql);
     }
     public Integer getId() {
         return id;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getSenderIBAN() {
         return senderIBAN;
     }

@@ -72,13 +72,14 @@ public class User {
 
         ResultSet dbVault = dbContext.executeQuery("SELECT * FROM vault WHERE id = %d".formatted(vaultId));
         try {
+            dbVault.next();
             this.vault = new Vault(
                 dbVault.getInt("id"),
                 dbVault.getDouble("total_savings"),
                 dbVault.getDouble("savings_per_day")
             );
-        } catch (SQLException e) {
-            this.vault = new Vault();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         this.accounts = new Vector<>();
@@ -199,7 +200,6 @@ public class User {
 
     public void makeTransaction(String IBAN, Double amount, Vector<User> users) {
 //      @TODO ADD TRANSACTION TO DATABASE
-
         Double tax = amount * 0.05;
         Account senderAccount = null;
         for (Account account : this.accounts) {
@@ -212,6 +212,7 @@ public class User {
 
         senderAccount.withdraw(amount + tax);
         Transaction transaction = new Transaction(senderAccount.getIBAN(), IBAN, amount, tax, LocalDate.now());
+
         this.transactions.add(transaction);
 
 
