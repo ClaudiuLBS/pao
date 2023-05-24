@@ -54,7 +54,7 @@ public class Account {
     }
 
     private void updateDbBalance() {
-        dbContext.executeUpdate("UPDATE account SET balance = %.5f WHERE id = %d".formatted(balance, id));
+        dbContext.executeUpdate("UPDATE account SET balance = %.5f WHERE id = %d".formatted(balance, id), "Update balance for account with id %d".formatted(id));
     }
 
     public void withdraw(Double amount) {

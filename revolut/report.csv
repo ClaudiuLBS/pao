@@ -1,0 +1,16 @@
+24-05-2023 20:11:51, Read all users
+24-05-2023 20:11:51, Read vault with id 1.
+24-05-2023 20:11:51, Read all accounts 
+24-05-2023 20:11:51, Read transactions for iban RO47 BRVL 3412 6464 3776 8128
+24-05-2023 20:11:51, Read cards for user 1
+24-05-2023 20:11:51, Read shares owned by user with id 1
+24-05-2023 20:11:51, Read crypto owned by user with id 1
+24-05-2023 20:11:51, Read vault with id 2.
+24-05-2023 20:11:51, Read all accounts 
+24-05-2023 20:11:51, Read transactions for iban RO47 BRVL 1226 4055 5511 6904
+24-05-2023 20:11:51, Read transactions for iban RO47 BRVL 5254 8243 9277 2646
+24-05-2023 20:11:51, Read cards for user 2
+24-05-2023 20:11:51, Read shares owned by user with id 2
+24-05-2023 20:11:51, Read crypto owned by user with id 2
+24-05-2023 20:12:16, Insert card for user with id 2
+24-05-2023 20:12:34, Delete account with id 3

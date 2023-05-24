@@ -39,7 +39,7 @@ public final class MainMenu {
     private User currentUser;
     private MainMenu() {
         users = new Vector<>();
-        ResultSet dbUsers = dbContext.executeQuery("SELECT * FROM user");
+        ResultSet dbUsers = dbContext.executeQuery("SELECT * FROM user", "Read all users");
         while (true) {
             try {
                 if (!dbUsers.next()) break;
@@ -151,7 +151,7 @@ public final class MainMenu {
         switch (input) {
             case 1 -> LogIn();
             case 2 -> Register();
-            case 0 -> System.exit(0);
+            case 3 -> System.exit(0);
             default -> {
             }
         }

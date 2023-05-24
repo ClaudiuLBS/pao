@@ -1,7 +1,13 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class DbContext {
@@ -12,6 +18,7 @@ public class DbContext {
     private static DbContext instance;
     private DbContext() {
         startConnection();
+
     }
     public static DbContext getInstance(){
         if(instance == null){
@@ -20,7 +27,19 @@ public class DbContext {
         return instance;
     }
 
-
+    private void writeToFile(String text) {
+       try {
+           FileWriter csvFile = new FileWriter("report.csv", true);
+           PrintWriter out = new PrintWriter(csvFile);
+           LocalDateTime timestamp = LocalDateTime.now();
+           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+           String timestampString = timestamp.format(formatter);
+           out.println(timestampString + ", " + text);
+           out.close();
+       } catch (Exception e) {
+           System.out.println(e.getMessage());
+       }
+    }
     public void startConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -36,20 +55,22 @@ public class DbContext {
             System.out.println(e);
         }
     }
-    ResultSet executeQuery(String sql) {
+    ResultSet executeQuery(String sql, String msg) {
         try {
             Statement statement = connection.createStatement();
+            writeToFile(msg);
             return statement.executeQuery(sql);
         } catch (Exception e){
             System.out.println("EXECUTE QUERY: " + e);
             return null;
         }
     }
-
-    Integer executeInsert(String sql) {
+    Integer executeInsert(String sql, String msg) {
         try {
             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             int affectedRows = statement.executeUpdate();
+            writeToFile(msg);
+
             if (affectedRows == 0) {
                 throw new SQLException("Failed to insert item.");
             }
@@ -62,9 +83,11 @@ public class DbContext {
         }
         return -1;
     }
-    Integer executeUpdate(String sql) {
+    Integer executeUpdate(String sql, String msg) {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            return statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+            writeToFile(msg);
+            return affectedRows;
         } catch (SQLException e) {
             e.printStackTrace();
         }

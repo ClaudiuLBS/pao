@@ -34,7 +34,7 @@ public class Transaction {
         String txDate = date.format(formatter);
         String sql = "INSERT INTO transaction (sender_iban, receiver_iban, amount, tax, transaction_date) VALUES ('%s', '%s', %.5f, %.5f, '%s')"
                 .formatted(senderIBAN, receiverIBAN, amount, tax, txDate);
-        id = dbContext.executeInsert(sql);
+        id = dbContext.executeInsert(sql, "Insert Transaction");
     }
     public Integer getId() {
         return id;

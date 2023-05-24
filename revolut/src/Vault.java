@@ -28,7 +28,7 @@ public class Vault {
     }
     public void setSavings(Double savings) {
         this.savings = savings;
-        dbContext.executeUpdate("UPDATE vault SET total_savings = %.5f WHERE id = %d".formatted(savings, id));
+        dbContext.executeUpdate("UPDATE vault SET total_savings = %.5f WHERE id = %d".formatted(savings, id), "Update savings for vault with id %d".formatted(id));
     }
 
     public Double getSavingPerDay() {
@@ -37,13 +37,13 @@ public class Vault {
 
     public void setSavingPerDay(Double savingPerDay) {
         this.savingPerDay = savingPerDay;
-        dbContext.executeUpdate("UPDATE vault SET savings_per_day = %.5f WHERE id = %d".formatted(savingPerDay, id));
+        dbContext.executeUpdate("UPDATE vault SET savings_per_day = %.5f WHERE id = %d".formatted(savingPerDay, id),  "Update savings per day for vault with id %d".formatted(id));
     }
 
 
     public void addToSavings(Double sum){
         this.savings += sum;
-        dbContext.executeUpdate("UPDATE vault SET total_savings = %.5f WHERE id = %d".formatted(savings, id));
+        dbContext.executeUpdate("UPDATE vault SET total_savings = %.5f WHERE id = %d".formatted(savings, id),  "Update savings for vault with id %d".formatted(id));
     }
 
     @Override

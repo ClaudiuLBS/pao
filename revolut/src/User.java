@@ -41,18 +41,18 @@ public class User {
     public void insertToDB() {
 //      CREATE VAULT
         String sql = "INSERT INTO vault (total_savings, savings_per_day) VALUES (%.5f, %.5f)".formatted(vault.getSavings(), vault.getSavingPerDay());
-        Integer vaultId = dbContext.executeInsert(sql);
+        Integer vaultId = dbContext.executeInsert(sql, "Insert vault");
         vault.setId(vaultId);
 //      CREATE USER
         sql = "INSERT INTO user (first_name, last_name, phone_number, email, password, vault_id) VALUES ('%s', '%s', '%s', '%s', '%s', %d)"
                 .formatted(firstName, lastName, phoneNumber, email, password, vaultId);
-        id = dbContext.executeInsert(sql);
+        id = dbContext.executeInsert(sql, "Insert user");
     }
 
     public void updateDbInfo() {
         dbContext.executeUpdate(
                 "UPDATE user SET first_name = '%s', last_name = '%s', phone_number = '%s', email = '%s', password = '%s' WHERE id = %d"
-                .formatted(firstName, lastName, phoneNumber, email, password, id)
+                .formatted(firstName, lastName, phoneNumber, email, password, id), "Update user with id %d".formatted(id)
             );
     }
     public User(
@@ -74,7 +74,7 @@ public class User {
         this.password = password;
 
 //      Add Vault
-        ResultSet dbVault = dbContext.executeQuery("SELECT * FROM vault WHERE id = %d".formatted(vaultId));
+        ResultSet dbVault = dbContext.executeQuery("SELECT * FROM vault WHERE id = %d".formatted(vaultId), "Read vault with id %d.".formatted(vaultId));
         dbVault.next();
         this.vault = new Vault(
             dbVault.getInt("id"),
@@ -85,7 +85,7 @@ public class User {
 //      Add Accounts
         this.accounts = new Vector<>();
         this.transactions = new Vector<>();
-        ResultSet dbAccounts = dbContext.executeQuery("SELECT * FROM account WHERE user_id = %d".formatted(id));
+        ResultSet dbAccounts = dbContext.executeQuery("SELECT * FROM account WHERE user_id = %d".formatted(id), "Read all accounts ");
         while (dbAccounts.next()) {
             Account account = new Account(
                     dbAccounts.getInt("id"),
@@ -93,7 +93,7 @@ public class User {
                     dbAccounts.getDouble("balance"),
                     dbAccounts.getString("currency")
             );
-            ResultSet dbTransactions = dbContext.executeQuery("SELECT * FROM transaction WHERE sender_iban = '%s' or receiver_iban = '%s'".formatted(account.getIBAN(), account.getIBAN()));
+            ResultSet dbTransactions = dbContext.executeQuery("SELECT * FROM transaction WHERE sender_iban = '%s' or receiver_iban = '%s'".formatted(account.getIBAN(), account.getIBAN()), "Read transactions for iban %s".formatted(account.getIBAN()));
             while (dbTransactions.next()) {
                 Transaction tx = new Transaction(
                         dbTransactions.getInt("id"),
@@ -110,7 +110,7 @@ public class User {
 
 //      Add Cards
         this.cards = new Vector<>();
-        ResultSet dbCards = dbContext.executeQuery("SELECT * FROM card WHERE user_id = %d".formatted(id));
+        ResultSet dbCards = dbContext.executeQuery("SELECT * FROM card WHERE user_id = %d".formatted(id), "Read cards for user %d".formatted(id));
         while (dbCards.next()) {
             Card card = new Card(
                     dbCards.getInt("id"),
@@ -125,7 +125,7 @@ public class User {
 
 //      Add Shares
         this.assetsOwned = new HashMap<>();
-        ResultSet dbShares = dbContext.executeQuery("SELECT * FROM shares_owned WHERE user_id = %d".formatted(id));
+        ResultSet dbShares = dbContext.executeQuery("SELECT * FROM shares_owned WHERE user_id = %d".formatted(id), "Read shares owned by user with id %d".formatted(id));
         while (dbShares.next())
             for (Share sh : allShares)
                 if (sh.getId() == dbShares.getInt("share_id")) {
@@ -135,7 +135,7 @@ public class User {
 
 //      Add Crypto
         this.stakedAmount = new TreeMap<>();
-        ResultSet dbCrypto = dbContext.executeQuery("SELECT * FROM crypto_owned WHERE user_id = %d".formatted(id));
+        ResultSet dbCrypto = dbContext.executeQuery("SELECT * FROM crypto_owned WHERE user_id = %d".formatted(id), "Read crypto owned by user with id %d".formatted(id));
         while (dbCrypto.next())
             for (CryptoCurrency cc : allCryptoCurrencies)
                 if (cc.getId() == dbCrypto.getInt("crypto_id")) {
@@ -256,7 +256,7 @@ public class User {
 
     public void terminateAccount(Account acc) {
         accounts.remove(acc);
-        dbContext.executeUpdate("DELETE FROM account WHERE id = %d".formatted(acc.getId()));
+        dbContext.executeUpdate("DELETE FROM account WHERE id = %d".formatted(acc.getId()), "Delete account with id %d".formatted(acc.getId()));
     }
 
     public void makeTransaction(String IBAN, Double amount, Vector<User> users) {
@@ -300,12 +300,12 @@ public class User {
                 if (asset instanceof CryptoCurrency) {
                     sql = "UPDATE crypto_owned SET amount = %.5f WHERE user_id = %d AND crypto_id = %d".formatted(assetAmount, id, asset.getId());
                 }
-                if (dbContext.executeUpdate(sql) > 0) return;
+                if (dbContext.executeUpdate(sql, "Update asset owned") > 0) return;
                 sql = "INSERT INTO shares_owned (user_id, share_id, amount) VALUES (%d, %d, %.5f)".formatted(id, asset.getId(), assetAmount);
                 if (asset instanceof CryptoCurrency) {
                     sql = "INSERT INTO crypto_owned (user_id, crypto_id, amount, staked_amount) VALUES (%d, %d, %.5f, 0)".formatted(id, asset.getId(), assetAmount);
                 }
-                dbContext.executeInsert(sql);
+                dbContext.executeInsert(sql, "Insert asset owned");
                 return;
             }
         }
@@ -336,7 +336,7 @@ public class User {
         Account account = new Account(this.generateIBAN(), currency);
         String sql = "INSERT INTO account (user_id, iban, balance, currency) VALUES (%d, '%s', %.5f, '%s')"
                 .formatted(id, account.getIBAN(), account.getBalance(), account.getCurrency().getCurrencyCode());
-        Integer accountId = dbContext.executeInsert(sql);
+        Integer accountId = dbContext.executeInsert(sql, "Insert account for user with id %d".formatted(id));
         account.setId(accountId);
         this.accounts.add(account);
         return account;
@@ -359,7 +359,7 @@ public class User {
         String expDate = card.getExpirationDate().format(formatter);
         String sql = "INSERT INTO card (user_id, tag, number, card_limit, cvv, expiration_date) VALUES (%d, '%s', '%s', %.5f, %d, '%s')"
                 .formatted(id, card.getTag(), card.getNumber(), card.getLimit(), card.getCVV(), expDate);
-        Integer cardId = dbContext.executeInsert(sql);
+        Integer cardId = dbContext.executeInsert(sql, "Insert card for user with id %d".formatted(id));
         card.setId(cardId);
 
         this.cards.add(card);
@@ -432,7 +432,7 @@ public class User {
         stakedAmount.put(crypto, stakedAmount.getOrDefault(crypto, 0.0) + amount);
         String sql = "UPDATE crypto_owned SET amount = %.2f, staked_amount = %.5f WHERE user_id = %d AND crypto_id = %d"
                         .formatted(assetsOwned.get(crypto), stakedAmount.get(crypto), id, crypto.getId());
-        dbContext.executeUpdate(sql);
+        dbContext.executeUpdate(sql, "Update crypto owned by user with id %d".formatted(id));
         System.out.println("Successfully staked " + amount + " " + crypto.getAbbreviation());
     }
 
@@ -445,7 +445,7 @@ public class User {
         assetsOwned.put(crypto, assetsOwned.getOrDefault(crypto, 0.0) + amount);
         String sql = "UPDATE crypto_owned SET amount = %.5f, staked_amount = %.5f WHERE user_id = %d AND crypto_id = %d"
                 .formatted(assetsOwned.get(crypto), stakedAmount.get(crypto), id, crypto.getId());
-        dbContext.executeUpdate(sql);
+        dbContext.executeUpdate(sql,  "Update crypto owned by user with id %d".formatted(id));
         System.out.println("Successfully withdrawn " + amount + " " + crypto.getAbbreviation());
     }
     public void showUserAssets() {
@@ -482,7 +482,7 @@ public class User {
             stakedAmount.put(crypto.getKey(), crypto.getValue() + crypto.getValue() * stakeRate);
             String sql = "UPDATE crypto_owned SET staked_amount = %.5f WHERE user_id = %d AND crypto_id = %d"
                     .formatted( stakedAmount.get(crypto.getKey()), id, crypto.getKey().getId());
-            dbContext.executeUpdate(sql);
+            dbContext.executeUpdate(sql,  "Update crypto owned by user with id %d".formatted(id));
         }
     }
 
