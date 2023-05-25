@@ -7,20 +7,8 @@ public final class MainMenu {
     private static Vector<User> users;
     private static Integer currentMenu = 0;
     DbContext dbContext = DbContext.getInstance();
-    private static final Share[] availableCompanies = {
-        new Share(1, "Apple Inc.", "AAPL", 568.20, 0.0064),
-        new Share(2, "Amazon.com Inc.", "AMZN", 3749.80, 0.0),
-        new Share(3, "Microsoft Corporation", "MSFT", 397.30, 0.008),
-        new Share(4, "Facebook, Inc.", "FB", 303.2, 0.0),
-        new Share(5, "Alphabet Inc.", "GOOGL", 2237.50, 0.0)
-    };
-    private static final CryptoCurrency[] availableCrypto = {
-        new CryptoCurrency(1, "Ethereum", "ETH", 3683.43, 0.066),
-        new CryptoCurrency(2, "Cardano", "ADA", 3.01, 0.053),
-        new CryptoCurrency(3, "Polkadot", "DOT", 59.52, 0.135),
-        new CryptoCurrency(4, "Solana", "SOL", 264.10, 0.085),
-        new CryptoCurrency(5, "Binance Coin", "BNB", 812.15, 0.091),
-    };
+    private static Share[] availableCompanies = new Share[5];
+    private static CryptoCurrency[] availableCrypto = new CryptoCurrency[5];
     private boolean search(String where, String what) {
         switch (where) {
             case "email":
@@ -38,8 +26,52 @@ public final class MainMenu {
     }
     private User currentUser;
     private MainMenu() {
+
+        ResultSet dbShares = dbContext.executeQuery("SELECT * FROM share;", " Read all shares");
+        int shareIndex = 0;
+        while(true){
+            try {
+                if (!dbShares.next()) break;
+                Share share = new Share(
+                        dbShares.getInt("id"),
+                        dbShares.getString("name"),
+                        dbShares.getString("abbreviation"),
+                        dbShares.getDouble("value"),
+                        dbShares.getDouble("dividends")
+                );
+                availableCompanies[shareIndex++] = share;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+        ResultSet dbCrypto = dbContext.executeQuery("SELECT * FROM crypto_currency", " Read all crypto");
+        int cryptoIndex = 0;
+        while(true){
+            try {
+                if (!dbCrypto.next()) break;
+                CryptoCurrency crypto = new CryptoCurrency(
+                        dbCrypto.getInt("id"),
+                        dbCrypto.getString("name"),
+                        dbCrypto.getString("abbreviation"),
+                        dbCrypto.getDouble("value"),
+                        dbCrypto.getDouble("staking_return")
+                );
+                availableCrypto[cryptoIndex++] = crypto;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
         users = new Vector<>();
         ResultSet dbUsers = dbContext.executeQuery("SELECT * FROM user", "Read all users");
+
+        if (dbUsers == null){
+            return;
+        }
+
         while (true) {
             try {
                 if (!dbUsers.next()) break;

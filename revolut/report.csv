@@ -14,3 +14,114 @@
 24-05-2023 20:11:51, Read crypto owned by user with id 2
 24-05-2023 20:12:16, Insert card for user with id 2
 24-05-2023 20:12:34, Delete account with id 3
+25-05-2023 14:52:39, Read all users
+25-05-2023 14:52:39, Read vault with id 1.
+25-05-2023 14:52:39, Read all accounts 
+25-05-2023 14:52:39, Read transactions for iban RO47 BRVL 5190 2234 5194 3456
+25-05-2023 14:52:39, Read cards for user 1
+25-05-2023 14:52:39, Read shares owned by user with id 1
+25-05-2023 14:52:39, Read crypto owned by user with id 1
+25-05-2023 14:53:22, Read all users
+25-05-2023 14:53:22, Read vault with id 1.
+25-05-2023 14:53:22, Read all accounts 
+25-05-2023 14:53:22, Read transactions for iban RO47 BRVL 5190 2234 5194 3456
+25-05-2023 14:53:22, Read cards for user 1
+25-05-2023 14:53:22, Read shares owned by user with id 1
+25-05-2023 14:53:22, Read crypto owned by user with id 1
+25-05-2023 14:53:27, Insert vault
+25-05-2023 14:53:27, Insert user
+25-05-2023 14:53:27, Insert account for user with id 2
+25-05-2023 14:53:27, Insert card for user with id 2
+25-05-2023 14:53:37, Update user with id 2
+25-05-2023 14:54:33, Read all users
+25-05-2023 14:54:33, Read vault with id 1.
+25-05-2023 14:54:33, Read all accounts 
+25-05-2023 14:54:33, Read transactions for iban RO47 BRVL 5190 2234 5194 3456
+25-05-2023 14:54:33, Read cards for user 1
+25-05-2023 14:54:33, Read shares owned by user with id 1
+25-05-2023 14:54:33, Read crypto owned by user with id 1
+25-05-2023 14:54:33, Read vault with id 2.
+25-05-2023 14:54:33, Read all accounts 
+25-05-2023 14:54:33, Read transactions for iban RO47 BRVL 2297 3988 4592 2750
+25-05-2023 14:54:33, Read cards for user 2
+25-05-2023 14:54:33, Read shares owned by user with id 2
+25-05-2023 14:54:33, Read crypto owned by user with id 2
+25-05-2023 15:09:06,  Read all shares
+25-05-2023 15:09:06,  Read all crypto
+25-05-2023 15:09:06, Read all users
+25-05-2023 15:09:06, Read vault with id 1.
+25-05-2023 15:09:06, Read all accounts 
+25-05-2023 15:09:06, Read transactions for iban RO47 BRVL 5190 2234 5194 3456
+25-05-2023 15:09:06, Read cards for user 1
+25-05-2023 15:09:06, Read shares owned by user with id 1
+25-05-2023 15:09:06, Read crypto owned by user with id 1
+25-05-2023 15:09:06, Read vault with id 2.
+25-05-2023 15:09:06, Read all accounts 
+25-05-2023 15:09:06, Read transactions for iban RO47 BRVL 2297 3988 4592 2750
+25-05-2023 15:09:06, Read cards for user 2
+25-05-2023 15:09:06, Read shares owned by user with id 2
+25-05-2023 15:09:06, Read crypto owned by user with id 2
+25-05-2023 15:09:38,  Read all shares
+25-05-2023 15:09:38,  Read all crypto
+25-05-2023 15:09:38, Read all users
+25-05-2023 15:09:38, Read vault with id 1.
+25-05-2023 15:09:38, Read all accounts 
+25-05-2023 15:09:38, Read transactions for iban RO47 BRVL 5190 2234 5194 3456
+25-05-2023 15:09:38, Read cards for user 1
+25-05-2023 15:09:38, Read shares owned by user with id 1
+25-05-2023 15:09:38, Read crypto owned by user with id 1
+25-05-2023 15:09:38, Read vault with id 2.
+25-05-2023 15:09:38, Read all accounts 
+25-05-2023 15:09:38, Read transactions for iban RO47 BRVL 2297 3988 4592 2750
+25-05-2023 15:09:38, Read cards for user 2
+25-05-2023 15:09:38, Read shares owned by user with id 2
+25-05-2023 15:09:38, Read crypto owned by user with id 2
+25-05-2023 15:10:03, Update balance for account with id 2
+25-05-2023 15:11:26,  Read all shares
+25-05-2023 15:11:26,  Read all crypto
+25-05-2023 15:11:26, Read all users
+25-05-2023 15:11:34, Insert vault
+25-05-2023 15:11:34, Insert user
+25-05-2023 15:11:34, Insert account for user with id 1
+25-05-2023 15:11:34, Insert card for user with id 1
+25-05-2023 15:11:38, Update user with id 1
+25-05-2023 15:11:51, Update balance for account with id 1
+25-05-2023 15:12:42,  Read all shares
+25-05-2023 15:12:42,  Read all crypto
+25-05-2023 15:12:42, Read all users
+25-05-2023 15:12:42, Read vault with id 1.
+25-05-2023 15:12:42, Read all accounts 
+25-05-2023 15:12:42, Read transactions for iban RO47 BRVL 5678 1882 7627 4827
+25-05-2023 15:12:42, Read cards for user 1
+25-05-2023 15:12:42, Read shares owned by user with id 1
+25-05-2023 15:12:42, Read crypto owned by user with id 1
+25-05-2023 15:13:08,  Read all shares
+25-05-2023 15:13:08,  Read all crypto
+25-05-2023 15:13:08, Read all users
+25-05-2023 15:13:08, Read vault with id 1.
+25-05-2023 15:13:08, Read all accounts 
+25-05-2023 15:13:08, Read transactions for iban RO47 BRVL 5678 1882 7627 4827
+25-05-2023 15:13:08, Read cards for user 1
+25-05-2023 15:13:08, Read shares owned by user with id 1
+25-05-2023 15:13:08, Read crypto owned by user with id 1
+25-05-2023 15:13:25, Update balance for account with id 1
+25-05-2023 15:13:25, Update asset owned
+25-05-2023 15:13:25, Insert asset owned
+25-05-2023 15:13:34, Update balance for account with id 1
+25-05-2023 15:13:34, Update asset owned
+25-05-2023 15:13:34, Insert asset owned
+25-05-2023 15:14:14, Update crypto owned by user with id 1
+25-05-2023 15:14:18, Update crypto owned by user with id 1
+25-05-2023 15:14:28, Update crypto owned by user with id 1
+25-05-2023 15:14:28, Update crypto owned by user with id 1
+25-05-2023 15:14:38, Update crypto owned by user with id 1
+25-05-2023 15:14:48, Update crypto owned by user with id 1
+25-05-2023 15:14:58, Update crypto owned by user with id 1
+25-05-2023 15:15:08, Update crypto owned by user with id 1
+25-05-2023 15:15:18, Update crypto owned by user with id 1
+25-05-2023 15:15:28, Update crypto owned by user with id 1
+25-05-2023 15:15:38, Update crypto owned by user with id 1
+25-05-2023 15:15:48, Update crypto owned by user with id 1
+25-05-2023 15:15:58, Update crypto owned by user with id 1
+25-05-2023 15:16:08, Update crypto owned by user with id 1
+25-05-2023 15:16:18, Update crypto owned by user with id 1
