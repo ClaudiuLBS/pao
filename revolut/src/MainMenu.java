@@ -356,7 +356,7 @@ public final class MainMenu {
         if (currentMenu != 3) return;
         currentUser.showUserAssets();
 
-        String[] menuOptions = {"Buy Shares", "Buy Crypto", "Stack Crypto", "Withdraw Crypto"};
+        String[] menuOptions = {"Buy Shares", "Buy Crypto", "Stake Crypto", "Withdraw Crypto"};
         for (int i = 0; i < menuOptions.length; i++)
             System.out.println(i + 1 + ". " + menuOptions[i]);
         System.out.println("0. Back");
